@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model RagChunk {
+  id          String   @id @db.VarChar(32)
+  text        String   @db.Text
+  source      String   @db.VarChar(120)
+  docType     String   @map("doc_type") @db.VarChar(32)
+  kategori    String   @db.VarChar(80)
+  tanggal     String?  @db.VarChar(40)
+  userSegment String   @map("user_segment") @db.VarChar(16)
+  chunkIndex  Int      @map("chunk_index")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([docType])
+  @@index([kategori])
+  @@index([userSegment])
+  @@map("rag_chunks")
+}
+
+model DemoTransaction {
+  id          Int      @id @default(autoincrement())
+  userSegment String   @map("user_segment") @db.VarChar(16)
+  owner       String   @db.VarChar(80)
+  date        DateTime
+  category    String   @db.VarChar(60)
+  description String   @db.VarChar(160)
+  amount      Int
+  budget      Int?
+  source      String   @db.VarChar(120)
+
+  @@index([userSegment])
+  @@index([category])
+  @@map("demo_transactions")
+}
+
+model DemoQuestion {
+  id          Int    @id @default(autoincrement())
+  label       String @db.VarChar(100)
+  question    String @db.Text
+  userSegment String @map("user_segment") @db.VarChar(16)
+  docType     String @map("doc_type") @db.VarChar(32)
+
+  @@map("demo_questions")
+}

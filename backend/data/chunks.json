@@ -1,0 +1,142 @@
+[
+  {
+    "id": "faq_001",
+    "text": "Q1: Bagaimana cara FinSight AI menghitung status budget saya?\nA1: FinSight AI menjumlahkan seluruh transaksi pada periode yang dipilih, lalu membandingkannya dengan budget bulanan yang kamu tetapkan. Jika total pengeluaran di bawah 80% budget, status AMAN. Jika 80-100%, status WASPADA. Jika melebihi 100%, status KRITIS.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Budget",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 0
+  },
+  {
+    "id": "faq_002",
+    "text": "Q2: Kategori apa saja yang dilacak oleh FinSight AI?\nA2: Kategori standar yang dilacak adalah Makan, Transport, Belanja, Tagihan, Hiburan, dan Kesehatan. Kamu bisa menambah kategori custom melalui menu Pengaturan > Kategori.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Kategori",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 1
+  },
+  {
+    "id": "faq_003",
+    "text": "Q3: Apa tips menghemat pengeluaran transport?\nA3: Manfaatkan transportasi umum seperti KRL atau bus untuk perjalanan rutin, batasi penggunaan ojek online maksimal 3 kali per minggu, dan coba carpooling dengan teman atau rekan kerja untuk perjalanan jarak jauh.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Transport",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 2
+  },
+  {
+    "id": "faq_004",
+    "text": "Q4: Apa tips menghemat pengeluaran makan?\nA4: Coba masak di rumah minimal 4 hari kerja per minggu, terapkan meal prepping di akhir pekan, dan kurangi frekuensi membeli kopi atau jajan di luar. Potensi hemat Rp 50.000-80.000 per minggu.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Makan",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 3
+  },
+  {
+    "id": "faq_005",
+    "text": "Q5: Apakah FinSight AI bisa memberi saran investasi?\nA5: Tidak. FinSight AI hanya menganalisis pola pengeluaran dan memberi rekomendasi penghematan berbasis data transaksi. FinSight AI bukan penasihat keuangan profesional dan tidak memberikan saran investasi atau produk keuangan apa pun.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Disclaimer",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 4
+  },
+  {
+    "id": "faq_006",
+    "text": "Q6: Bagaimana FinSight AI menjaga privasi data keuangan saya?\nA6: Data transaksi disimpan secara lokal terenkripsi di perangkat. FinSight AI hanya mengirim kategori dan jumlah transaksi ke AI untuk dianalisis, bukan nama merchant, nama lengkap, atau nomor rekening.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Privasi",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 5
+  },
+  {
+    "id": "faq_007",
+    "text": "Q7: Apa yang terjadi jika data transaksi saya tidak lengkap?\nA7: FinSight AI tidak akan menebak atau mengarang angka yang tidak ada. Jika data tidak lengkap, AI akan meminta klarifikasi atau data tambahan sebelum memberikan analisis.",
+    "source": "faq_keuangan_pribadi.md",
+    "docType": "faq",
+    "kategori": "Data Tidak Lengkap",
+    "tanggal": null,
+    "userSegment": "b2c",
+    "chunkIndex": 6
+  },
+  {
+    "id": "policy_001",
+    "text": "Pasal 1 - Reimbursement Transport\nKaryawan dapat mengajukan reimbursement biaya transportasi dinas dengan batas maksimum Rp 150.000 per hari untuk transportasi dalam kota. Untuk perjalanan luar kota, reimbursement transport kereta atau pesawat kelas ekonomi diajukan dengan melampirkan tiket asli dan disetujui oleh atasan langsung.",
+    "source": "policy_expense_v1.md",
+    "docType": "policy",
+    "kategori": "Transport",
+    "tanggal": "v1",
+    "userSegment": "b2b",
+    "chunkIndex": 0
+  },
+  {
+    "id": "policy_002",
+    "text": "Pasal 2 - Reimbursement Akomodasi\nBiaya akomodasi hotel untuk perjalanan dinas luar kota direimburse maksimum Rp 500.000 per malam, dengan melampirkan invoice hotel. Akomodasi di atas batas tersebut memerlukan persetujuan tambahan dari manajer departemen.",
+    "source": "policy_expense_v1.md",
+    "docType": "policy",
+    "kategori": "Akomodasi",
+    "tanggal": "v1",
+    "userSegment": "b2b",
+    "chunkIndex": 1
+  },
+  {
+    "id": "policy_003",
+    "text": "Pasal 3 - Entertainment & Client Meal\nBiaya makan bersama klien atau client meal dapat direimburse dengan batas maksimum Rp 400.000 per orang per acara. Klaim wajib dilampiri struk asli dan mendapat approval dari manajer langsung sebelum diajukan ke Finance. Klaim tanpa struk atau tanpa approval manajer akan ditolak otomatis.",
+    "source": "policy_expense_v1.md",
+    "docType": "policy",
+    "kategori": "Entertainment",
+    "tanggal": "v1",
+    "userSegment": "b2b",
+    "chunkIndex": 2
+  },
+  {
+    "id": "policy_004",
+    "text": "Pasal 4 - Batas Waktu Pengajuan Klaim\nSeluruh klaim reimbursement wajib diajukan maksimal 14 hari kerja setelah tanggal transaksi terjadi. Klaim yang diajukan melewati batas waktu tersebut memerlukan justifikasi tertulis dan persetujuan dari Finance Manager.",
+    "source": "policy_expense_v1.md",
+    "docType": "policy",
+    "kategori": "Batas Waktu",
+    "tanggal": "v1",
+    "userSegment": "b2b",
+    "chunkIndex": 3
+  },
+  {
+    "id": "policy_005",
+    "text": "Pasal 5 - Budget Tim Bulanan\nSetiap tim memiliki alokasi budget bulanan untuk operasional dan entertainment yang ditetapkan oleh Finance di awal tahun. Jika total pengeluaran tim melebihi 90% dari budget bulanan, sistem akan mengirim alert otomatis kepada Team Lead dan Finance untuk evaluasi.",
+    "source": "policy_expense_v1.md",
+    "docType": "policy",
+    "kategori": "Budget Tim",
+    "tanggal": "v1",
+    "userSegment": "b2b",
+    "chunkIndex": 4
+  },
+  {
+    "id": "trx_001",
+    "text": "Transaksi B2C Juni: Belanja Rp 320.000, Makan Rp 220.000, Tagihan Rp 200.000, Transport Rp 155.000, Hiburan Rp 50.000. Total pengeluaran Rp 945.000 dari budget Rp 3.000.000.",
+    "source": "sample_transaksi_juni.csv",
+    "docType": "transaksi",
+    "kategori": "Budget",
+    "tanggal": "2026-06",
+    "userSegment": "b2c",
+    "chunkIndex": 0
+  },
+  {
+    "id": "trx_002",
+    "text": "Expense tim Juni: Operasional Rp 9.300.000 dari budget Rp 10.000.000. Status di atas 90 persen sehingga perlu alert kepada Team Lead dan Finance.",
+    "source": "sample_expense_team_juni.csv",
+    "docType": "transaksi",
+    "kategori": "Budget Tim",
+    "tanggal": "2026-06",
+    "userSegment": "b2b",
+    "chunkIndex": 1
+  }
+]
