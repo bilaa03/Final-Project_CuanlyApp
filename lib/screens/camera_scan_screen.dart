@@ -69,6 +69,18 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
     }
   }
 
+  String _validateCategory(String? cat) {
+    const valid = ['Makanan', 'Transport', 'Belanja', 'Hiburan', 'Lainnya'];
+    if (cat != null && valid.contains(cat)) return cat;
+    if (cat == null) return 'Lainnya';
+    final c = cat.toLowerCase();
+    if (c.contains('makan') || c.contains('minum') || c.contains('cafe') || c.contains('resto')) return 'Makanan';
+    if (c.contains('trans') || c.contains('ojek') || c.contains('grab') || c.contains('gojek') || c.contains('bensin') || c.contains('parkir')) return 'Transport';
+    if (c.contains('belanja') || c.contains('beli') || c.contains('indo') || c.contains('alfa') || c.contains('super')) return 'Belanja';
+    if (c.contains('hibur') || c.contains('game') || c.contains('movie') || c.contains('nonton')) return 'Hiburan';
+    return 'Lainnya';
+  }
+
   Future<void> _uploadAndScanReceipt() async {
     if (_selectedImage == null) return;
 
@@ -78,7 +90,19 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
     });
 
     try {
-      // Read image bytes and convert to Base64
+      // 1. Fetch API Key dynamically from backend
+      final keyUri = Uri.parse('${widget.apiBaseUrl}/financial/ocr/key');
+      final keyResponse = await http.get(keyUri).timeout(const Duration(seconds: 10));
+      if (keyResponse.statusCode != 200) {
+        throw Exception('Gagal mengambil API Key dari server (Status: ${keyResponse.statusCode}).');
+      }
+      final keyData = jsonDecode(keyResponse.body);
+      final String apiKey = keyData['apiKey'] ?? '';
+      if (apiKey.isEmpty) {
+        throw Exception('API Key Gemini belum diset di server Railway Anda.');
+      }
+
+      // 2. Read image bytes and convert to Base64
       final bytes = await _selectedImage!.readAsBytes();
       final base64Image = base64Encode(bytes);
       
@@ -86,44 +110,91 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
       final extension = _selectedImage!.path.split('.').last.toLowerCase();
       final mimeType = (extension == 'png') ? 'image/png' : 'image/jpeg';
 
+      // 3. Request Gemini Multimodal API directly from device (using client residential IP)
+      final geminiUri = Uri.parse(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey',
+      );
+
+      final prompt = [
+        'Kamu adalah Cuanly OCR Engine.',
+        'Tugasmu adalah menganalisis gambar struk/receipt belanja ini dan mengekstrak informasi keuangan berikut:',
+        '1. title: Nama toko/merchant atau ringkasan pembelian yang representatif (contoh: "Starbucks Coffee", "Indomaret").',
+        '2. amount: Total pengeluaran nominal angka bulat (number) saja tanpa simbol rupiah/titik desimal (contoh: 45000).',
+        '3. category: Kategori transaksi. Kamu WAJIB memilih salah satu dari daftar ini saja:',
+        '   - "Makanan" (untuk makanan, minuman, kafe, restoran)',
+        '   - "Transport" (untuk bensin, parkir, ojek, tol, tiket perjalanan)',
+        '   - "Belanja" (untuk belanja bulanan, minimarket, baju, barang retail)',
+        '   - "Hiburan" (untuk bioskop, game, rekreasi)',
+        '   - "Lainnya" (jika tidak masuk kategori mana pun)',
+        '4. walletName: Metode pembayaran yang terdeteksi atau disarankan berdasarkan struk (contoh: "Cash", "GoPay", "Bank Mandiri", "OVO", "ShopeePay").',
+        '',
+        'PENTING: Kembalikan respon HANYA dalam format JSON valid dengan key: title, amount, category, walletName. Jangan tambahkan penjelasan lain di luar JSON.',
+      ].join('\n');
+
+      final requestBody = {
+        'contents': [
+          {
+            'parts': [
+              { 'text': prompt },
+              {
+                'inlineData': {
+                  'mimeType': mimeType,
+                  'data': base64Image,
+                },
+              },
+            ],
+          },
+        ],
+        'generationConfig': {
+          'temperature': 0.1,
+          'responseMimeType': 'application/json',
+        },
+      };
+
       final response = await http.post(
-        Uri.parse('${widget.apiBaseUrl}/financial/ocr'),
+        geminiUri,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'image': base64Image,
-          'mimeType': mimeType,
-        }),
+        body: jsonEncode(requestBody),
       ).timeout(const Duration(seconds: 25));
 
       if (response.statusCode == 200) {
-        final resData = jsonDecode(response.body);
-        if (resData['ok'] == true && resData['data'] != null) {
-          final data = resData['data'];
-          
-          setState(() {
-            _isScanning = false;
-            _statusText = 'Pemindaian sukses!';
-          });
+        final data = jsonDecode(response.body);
+        final String? textResult = data['candidates']?[0]?['content']?['parts']?[0]?['text'];
+        if (textResult == null || textResult.isEmpty) {
+          throw Exception('Respon Gemini kosong.');
+        }
 
-          // Show success message briefly before returning
-          await Future.delayed(const Duration(milliseconds: 500));
+        final parsed = jsonDecode(textResult.trim());
+        
+        setState(() {
+          _isScanning = false;
+          _statusText = 'Pemindaian sukses!';
+        });
 
-          if (mounted) {
-            widget.onScanSuccess(
-              data['title'] ?? 'Struk Belanja',
-              (data['amount'] as num).toDouble(),
-              data['category'] ?? 'Lainnya',
-              data['walletName'] ?? 'Cash',
-            );
-            Navigator.pop(context);
-          }
-        } else {
-          throw Exception(resData['error'] ?? 'Gagal memproses struk.');
+        // Show success message briefly before returning
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        if (mounted) {
+          widget.onScanSuccess(
+            parsed['title'] ?? 'Struk Belanja',
+            (parsed['amount'] as num).toDouble(),
+            _validateCategory(parsed['category'] as String?),
+            parsed['walletName'] ?? 'Cash',
+          );
+          Navigator.pop(context);
         }
       } else {
-        throw Exception('Server merespon dengan status: ${response.statusCode}');
+        // Try parsing google error message
+        String errorMsg = 'Google API error ${response.statusCode}';
+        try {
+          final errData = jsonDecode(response.body);
+          if (errData['error']?['message'] != null) {
+            errorMsg = errData['error']['message'];
+          }
+        } catch (_) {}
+        throw Exception(errorMsg);
       }
     } catch (e) {
       setState(() {

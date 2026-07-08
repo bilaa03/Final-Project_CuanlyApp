@@ -135,6 +135,13 @@ app.post('/financial/ocr', async (req, res, next) => {
   }
 });
 
+app.get('/financial/ocr/key', (req, res) => {
+  res.json({
+    ok: true,
+    apiKey: process.env.GEMINI_API_KEY || '',
+  });
+});
+
 app.post('/rag/query', async (req, res, next) => {
   try {
     res.json(await runRag(req.body ?? {}));
