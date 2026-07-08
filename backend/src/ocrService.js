@@ -10,6 +10,9 @@ export async function extractReceiptData(base64Image, mimeType = 'image/jpeg') {
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 
+  console.log('GEMINI_API_KEY starts with:', apiKey ? apiKey.substring(0, 10) + '...' : 'undefined');
+  console.log('AI_PROVIDER is:', process.env.AI_PROVIDER);
+
   // Fallback simulator if API Key is missing or default local provider
   if (!apiKey || apiKey.trim() === '' || apiKey.includes('YOUR_') || process.env.AI_PROVIDER === 'local') {
     console.log('Gemini API key is not configured or set to local. Using OCR simulator fallback.');
