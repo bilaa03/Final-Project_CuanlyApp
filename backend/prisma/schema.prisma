@@ -49,3 +49,41 @@ model DemoQuestion {
 
   @@map("demo_questions")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(80)
+  email     String   @unique @db.VarChar(80)
+  password  String   @db.VarChar(80)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Wallet {
+  id         Int      @id @default(autoincrement())
+  userEmail  String   @map("user_email") @db.VarChar(80)
+  name       String   @db.VarChar(80)
+  balance    Float
+  cardNumber String   @map("card_number") @db.VarChar(40)
+  designType String   @map("design_type") @db.VarChar(20)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([userEmail])
+  @@map("wallets")
+}
+
+model Transaction {
+  id          String   @id @db.VarChar(40)
+  userEmail   String   @map("user_email") @db.VarChar(80)
+  title       String   @db.VarChar(120)
+  category    String   @db.VarChar(60)
+  date        DateTime
+  amount      Float
+  isExpense   Boolean  @map("is_expense")
+  walletName  String   @map("wallet_name") @db.VarChar(80)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([userEmail])
+  @@map("transactions")
+}

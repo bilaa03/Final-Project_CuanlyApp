@@ -11,6 +11,10 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.env
+**/.env
+!.env.example
+!**/.env.example
 
 # IntelliJ related
 *.iml
@@ -32,6 +36,8 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+node_modules/
+**/node_modules/
 
 # Symbolication related
 app.*.symbols

@@ -1,623 +1,535 @@
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'models/chat.dart';
+import 'models/demo_question.dart';
+import 'models/transaction.dart';
+import 'models/user.dart';
+import 'models/wallet.dart';
+
+import 'screens/auth_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/chat_screen.dart';
+import 'screens/transaction_screen.dart';
+import 'screens/wallet_screen.dart';
+import 'screens/analysis_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/camera_scan_screen.dart';
+
 void main() {
-  runApp(const FinSightApp());
+  runApp(const CuanlyApp());
 }
 
-class FinSightApp extends StatelessWidget {
-  const FinSightApp({super.key});
+class CuanlyApp extends StatefulWidget {
+  const CuanlyApp({super.key});
+
+  @override
+  State<CuanlyApp> createState() => _CuanlyAppState();
+}
+
+class _CuanlyAppState extends State<CuanlyApp> {
+  String _globalAccent = 'gold';
+
+  void _updateAccent(String newAccent) {
+    setState(() {
+      _globalAccent = newAccent;
+    });
+  }
+
+  Color _getPrimaryColor() {
+    switch (_globalAccent) {
+      case 'emerald':
+        return const Color(0xFF10B981);
+      case 'sapphire':
+        return const Color(0xFF3B82F6);
+      default:
+        return const Color(0xFFCCA352); // Gold
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = _getPrimaryColor();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'FinSight AI',
+      title: 'Cuanly',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF127C74),
-          brightness: Brightness.light,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF0F0F14),
+        cardColor: const Color(0xFF1C1C24),
+        colorScheme: ColorScheme.dark(
+          primary: primaryColor,
+          secondary: _globalAccent == 'gold'
+              ? const Color(0xFFF5A623)
+              : _globalAccent == 'emerald'
+                  ? const Color(0xFF059669)
+                  : const Color(0xFF1D4ED8),
+          surface: const Color(0xFF1C1C24),
+          shadow: Colors.black.withValues(alpha: 0.5),
         ),
-        scaffoldBackgroundColor: const Color(0xFFF5F7F8),
+        fontFamily: 'Arial',
         useMaterial3: true,
       ),
-      home: const FinSightHomePage(),
+      home: CuanlyMainLayout(
+        currentAccent: _globalAccent,
+        onAccentChanged: _updateAccent,
+      ),
     );
   }
 }
 
-class DemoQuestion {
-  const DemoQuestion(this.label, this.segment, this.question);
+class CuanlyMainLayout extends StatefulWidget {
+  final String currentAccent;
+  final ValueChanged<String> onAccentChanged;
 
-  final String label;
-  final String segment;
-  final String question;
-}
-
-class FinSightHomePage extends StatefulWidget {
-  const FinSightHomePage({super.key});
+  const CuanlyMainLayout({
+    super.key,
+    required this.currentAccent,
+    required this.onAccentChanged,
+  });
 
   @override
-  State<FinSightHomePage> createState() => _FinSightHomePageState();
+  State<CuanlyMainLayout> createState() => _CuanlyMainLayoutState();
 }
 
-class _FinSightHomePageState extends State<FinSightHomePage> {
-  static const apiBaseUrl = 'http://localhost:8787';
+class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
+  int _activeTabIndex = 0;
+  bool _isLoggedIn = false;
 
-  final controller = TextEditingController(
-    text:
-        'Apakah klaim makan klien senilai Rp 500.000 ini sesuai dengan policy expense perusahaan?',
-  );
-
-  final demos = const [
-    DemoQuestion(
-      'Budget B2C',
-      'b2c',
-      'Berapa total pengeluaranku bulan ini dan apakah sudah melebihi budget?',
-    ),
-    DemoQuestion(
-      'Tips Transport',
-      'b2c',
-      'Apa tips menghemat pengeluaran transport?',
-    ),
-    DemoQuestion(
-      'Investasi',
-      'b2c',
-      'Apakah FinSight AI bisa memberi saran investasi saham?',
-    ),
-    DemoQuestion(
-      'Client Meal',
-      'b2b',
-      'Apakah klaim makan klien senilai Rp 500.000 ini sesuai dengan policy expense perusahaan?',
-    ),
-    DemoQuestion(
-      'Akomodasi',
-      'b2b',
-      'Berapa batas maksimum reimbursement untuk akomodasi hotel?',
-    ),
-    DemoQuestion('Out-of-domain', 'b2c', 'Siapa presiden Indonesia saat ini?'),
+  // Users Auth simulation database
+  final List<UserAccount> _users = [
+    UserAccount(name: 'Bilaa', email: 'bilaa@cuanly.ai', password: 'password123'),
+    UserAccount(name: 'Demo', email: 'demo@cuanly.ai', password: 'password123'),
   ];
 
-  String segment = 'b2b';
-  String docType = 'auto';
-  bool loading = false;
-  Map<String, dynamic>? result;
-  String? error;
+  // User Profile
+  String _userName = 'Bilaa';
+  String _userEmail = 'bilaa@cuanly.ai';
+  double _budgetLimit = 3000000;
+  bool _roastMode = false;
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  final List<WalletItem> _wallets = [];
+  late List<TransactionItem> _transactions;
+
+  // AI Chat states
+  // Gunakan http://10.0.2.2:8787 untuk Android Emulator, atau http://localhost:8787 untuk Web/Windows Desktop
+  final String _apiBaseUrl = 'http://10.0.2.2:8787';
+  final List<ChatMsg> _chatHistory = [];
+  bool _chatLoading = false;
+  String _activeChatSegment = 'b2c';
+  String _userAvatar = 'violet';
+
+  final List<DemoQuestion> _demoQuestions = const [
+    DemoQuestion('Budget B2C', 'b2c', 'Berapa total pengeluaranku bulan ini dan apakah sudah melebihi budget?'),
+    DemoQuestion('Tips Hemat', 'b2c', 'Berikan tips menghemat uang jajan mahasiswa.'),
+    DemoQuestion('Investasi', 'b2c', 'Bagaimana cara mulai investasi dengan modal kecil?'),
+    DemoQuestion('AWS Claim B2B', 'b2b', 'Apakah pengeluaran AWS Cloud Hosting senilai Rp 1.500.000 disetujui?'),
+    DemoQuestion('Hotel Limit B2B', 'b2b', 'Berapa batas reimbursement hotel dinas luar kota?'),
+  ];
+
+  Color _getPrimaryColor() {
+    switch (widget.currentAccent) {
+      case 'emerald':
+        return const Color(0xFF10B981);
+      case 'sapphire':
+        return const Color(0xFF3B82F6);
+      default:
+        return const Color(0xFFCCA352);
+    }
   }
 
-  Future<void> ask() async {
+  @override
+  void initState() {
+    super.initState();
+    _transactions = [];
+  }
+
+  void _initializeUserData(String email) {
+    _wallets.clear();
+    if (email == 'bilaa@cuanly.ai' || email == 'demo@cuanly.ai') {
+      _wallets.addAll([
+        WalletItem(name: 'Bank Mandiri', balance: 3500000, cardNumber: '•••• 8821', designType: 'blue'),
+        WalletItem(name: 'GoPay', balance: 500000, cardNumber: '0812 •••• 9012', designType: 'teal'),
+        WalletItem(name: 'OVO', balance: 200000, cardNumber: '0812 •••• 9012', designType: 'purple'),
+        WalletItem(name: 'Cash', balance: 120000, cardNumber: 'Fisik', designType: 'slate'),
+      ]);
+
+      _transactions = [
+        TransactionItem(
+          id: 't1',
+          title: 'Restoran & Coffee Shop',
+          category: 'Makanan',
+          date: DateTime.now().subtract(const Duration(minutes: 45)),
+          amount: 650000,
+          isExpense: true,
+          wallet: 'Cash',
+        ),
+        TransactionItem(
+          id: 't2',
+          title: 'Grab Ride',
+          category: 'Transport',
+          date: DateTime.now().subtract(const Duration(days: 2)),
+          amount: 320000,
+          isExpense: true,
+          wallet: 'GoPay',
+        ),
+        TransactionItem(
+          id: 't3',
+          title: 'Belanja Indomaret',
+          category: 'Belanja',
+          date: DateTime.now().subtract(const Duration(hours: 4)),
+          amount: 430000,
+          isExpense: true,
+          wallet: 'Bank Mandiri',
+        ),
+        TransactionItem(
+          id: 't4',
+          title: 'Gaji Bulanan',
+          category: 'Pemasukan',
+          date: DateTime.now().subtract(const Duration(days: 3)),
+          amount: 3500000,
+          isExpense: false,
+          wallet: 'Bank Mandiri',
+        ),
+      ];
+    } else {
+      // Akun baru dibuat kosong
+      _wallets.add(
+        WalletItem(name: 'Cash', balance: 0.0, cardNumber: 'Fisik', designType: 'slate'),
+      );
+      _transactions = [];
+    }
+  }
+
+  void _addTransaction(String title, double amount, String category, bool isExpense, String walletName) {
+    final newTx = TransactionItem(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: title,
+      category: category,
+      date: DateTime.now(),
+      amount: amount,
+      isExpense: isExpense,
+      wallet: walletName,
+    );
+
     setState(() {
-      loading = true;
-      error = null;
+      _transactions.insert(0, newTx);
+      final wallet = _wallets.firstWhere((w) => w.name == walletName);
+      if (isExpense) {
+        wallet.balance -= amount;
+      } else {
+        wallet.balance += amount;
+      }
+    });
+
+    // Notify backend if online
+    http.post(
+      Uri.parse('$_apiBaseUrl/financial/transaction'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': _userEmail,
+        'id': newTx.id,
+        'title': title,
+        'category': category,
+        'date': newTx.date.toIso8601String(),
+        'amount': amount,
+        'isExpense': isExpense,
+        'walletName': walletName,
+      }),
+    ).catchError((_) => http.Response('Offline Fallback', 200));
+  }
+
+  void _transferWallet(String from, String to, double amount) {
+    setState(() {
+      final fWallet = _wallets.firstWhere((w) => w.name == from);
+      final tWallet = _wallets.firstWhere((w) => w.name == to);
+      fWallet.balance -= amount;
+      tWallet.balance += amount;
+    });
+  }
+
+  Future<void> _askRAG(String question) async {
+    setState(() {
+      _chatLoading = true;
+      _chatHistory.add(ChatMsg(isUser: true, text: question));
     });
 
     try {
       final response = await http.post(
-        Uri.parse('$apiBaseUrl/rag/query'),
+        Uri.parse('$_apiBaseUrl/rag/query'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'question': controller.text,
-          'userSegment': segment,
-          'docType': docType,
+          'question': question,
+          'userSegment': _activeChatSegment,
+          'docType': 'auto',
           'topK': 3,
         }),
       );
 
       if (response.statusCode != 200) {
-        throw Exception('API error ${response.statusCode}: ${response.body}');
+        throw Exception();
       }
 
-      setState(
-        () => result = jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } catch (e) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      
+      String answerText = data['jawaban'] ?? 'Tidak ada jawaban.';
+      if (_roastMode) {
+        answerText += '\n\n🔥 Roast AI: Belanja bulanan kamu boros banget! Kurangi beli kopi Starbucks Caramelnya!';
+      }
+
       setState(() {
-        error =
-            'Backend belum aktif atau request gagal. Jalankan: cd backend && npm start\n\n$e';
+        List<dynamic> recs = [];
+        if (data['rekomendasi'] is List) {
+          recs = data['rekomendasi'] as List<dynamic>;
+        } else if (data['rekomendasi'] is String) {
+          recs = [data['rekomendasi'] as String];
+        } else {
+          recs = ['Tips hemat makanan', 'Cara split bill'];
+        }
+
+        _chatHistory.add(ChatMsg(
+          isUser: false,
+          text: answerText,
+          directAnswer: answerText.contains('Rp') ? 'Rp ${answerText.split("Rp")[1].split(" ")[0]}' : null,
+          contextBadge: answerText.contains('naik') ? '▲ Naik' : answerText.contains('turun') ? '▼ Turun' : '■ Stabil',
+          rekomendasi: recs,
+          retrievedChunks: data['retrieved_chunks'],
+        ));
+      });
+    } catch (_) {
+      // Fallback local simulated RAG response
+      Timer(const Duration(milliseconds: 800), () {
+        String simAnswer = 'Jawaban Simulasi RAG: Total pengeluaran bulan ini terkendali.';
+        if (_roastMode) {
+          simAnswer += '\n\n🔥 Roast AI: Dompet kamu udah sekarat!';
+        }
+        setState(() {
+          _chatHistory.add(ChatMsg(
+            isUser: false,
+            text: simAnswer,
+            directAnswer: 'Rp 1.400.000',
+            contextBadge: '▲ Naik 12%',
+            rekomendasi: const ['Tips hemat makanan', 'Cara split bill'],
+          ));
+        });
       });
     } finally {
-      setState(() => loading = false);
+      setState(() {
+        _chatLoading = false;
+      });
     }
   }
 
-  void useDemo(DemoQuestion demo) {
-    setState(() {
-      controller.text = demo.question;
-      segment = demo.segment;
-      docType = 'auto';
-    });
-    ask();
+  // Calculations
+  double get _totalSaldo => _wallets.fold(0, (sum, w) => sum + w.balance);
+  double get _totalPemasukan => _transactions.where((t) => !t.isExpense).fold(0.0, (sum, t) => sum + t.amount);
+  double get _totalPengeluaran => _transactions.where((t) => t.isExpense).fold(0.0, (sum, t) => sum + t.amount);
+
+  void _showScanBonDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Column(
+          children: [
+            Icon(Icons.photo_camera, color: Color(0xFF7F77DD), size: 40),
+            SizedBox(height: 14),
+            Text(
+              'Akses Kamera',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ],
+        ),
+        content: const Text(
+          'Cuanly memerlukan izin kamera untuk memindai struk belanja dan mencatat pengeluaran Anda secara otomatis menggunakan AI.',
+          style: TextStyle(color: Color(0xFF8B8A88), fontSize: 12, height: 1.4),
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(this.context).showSnackBar(
+                const SnackBar(
+                  content: Text('Akses kamera ditolak. Fitur OCR struk dinonaktifkan.'),
+                  backgroundColor: Color(0xFFE24B4A),
+                ),
+              );
+            },
+            child: const Text('Tolak', style: TextStyle(color: Color(0xFF8B8A88), fontWeight: FontWeight.bold)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7F77DD),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              // Open Camera
+              Navigator.push(
+                this.context,
+                MaterialPageRoute(
+                  builder: (context) => CameraScanScreen(
+                    onScanSuccess: (title, amount, category, wallet) {
+                      _addTransaction(title, amount, category, true, wallet);
+                      ScaffoldMessenger.of(this.context).showSnackBar(
+                        SnackBar(
+                          content: Text('Berhasil memindai struk: $title senilai Rp ${NumberFormat.format(amount)}.'),
+                          backgroundColor: const Color(0xFF10B981),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+            child: const Text('Izinkan', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final wide = constraints.maxWidth >= 980;
-            return Row(
-              children: [
-                SizedBox(
-                  width: wide ? 360 : constraints.maxWidth,
-                  child: _ControlPanel(
-                    controller: controller,
-                    demos: demos,
-                    segment: segment,
-                    docType: docType,
-                    loading: loading,
-                    onSegmentChanged: (value) =>
-                        setState(() => segment = value),
-                    onDocTypeChanged: (value) =>
-                        setState(() => docType = value),
-                    onAsk: ask,
-                    onDemo: useDemo,
-                  ),
-                ),
-                if (wide) const VerticalDivider(width: 1),
-                if (wide)
-                  Expanded(
-                    child: _ResultPanel(
-                      result: result,
-                      error: error,
-                      loading: loading,
-                    ),
-                  ),
-              ],
+    if (!_isLoggedIn) {
+      return AuthScreen(
+        users: _users,
+        currentAccent: widget.currentAccent,
+        onLogin: (email, pass) {
+          final found = _users.any((u) => u.email == email && u.password == pass);
+          if (found) {
+            setState(() {
+              _isLoggedIn = true;
+              _userEmail = email;
+              _userName = email.split('@')[0];
+              _initializeUserData(email);
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Email atau password tidak sesuai!'), backgroundColor: Color(0xFFE24B4A)),
             );
-          },
+          }
+        },
+        onRegister: (name, email, pass) {
+          setState(() {
+            _users.add(UserAccount(name: name, email: email, password: pass));
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registrasi Sukses! Silakan login.'), backgroundColor: Color(0xFF10B981)),
+          );
+        },
+      );
+    }
+
+    final List<Widget> screens = [
+      HomeScreen(
+        totalSaldo: _totalSaldo,
+        totalPemasukan: _totalPemasukan,
+        totalPengeluaran: _totalPengeluaran,
+        budgetLimit: _budgetLimit,
+        transactions: _transactions,
+        wallets: _wallets,
+        onScanClick: _showScanBonDialog,
+        onNavigateToTab: (idx) => setState(() => _activeTabIndex = idx),
+      ),
+      WalletScreen(
+        wallets: _wallets,
+        currentAccent: widget.currentAccent,
+        onTransfer: _transferWallet,
+      ),
+      TransactionScreen(
+        transactions: _transactions,
+        wallets: _wallets,
+        currentAccent: widget.currentAccent,
+        onAddTransaction: _addTransaction,
+      ),
+      AnalysisScreen(
+        transactions: _transactions,
+        currentAccent: widget.currentAccent,
+      ),
+      ChatScreen(
+        chatHistory: _chatHistory,
+        chatLoading: _chatLoading,
+        currentAccent: widget.currentAccent,
+        demoQuestions: _demoQuestions,
+        activeChatSegment: _activeChatSegment,
+        onAskQuestion: _askRAG,
+        onSegmentChanged: (seg) => setState(() => _activeChatSegment = seg),
+        roastMode: _roastMode,
+        onRoastModeChanged: (val) => setState(() => _roastMode = val),
+      ),
+      SettingsScreen(
+        userName: _userName,
+        userEmail: _userEmail,
+        budgetLimit: _budgetLimit,
+        currentAccent: widget.currentAccent,
+        userAvatar: _userAvatar,
+        onBudgetLimitChanged: (lim) => setState(() => _budgetLimit = lim),
+        onAccentChanged: widget.onAccentChanged,
+        onAvatarChanged: (avatar) => setState(() => _userAvatar = avatar),
+        onLogout: () => setState(() => _isLoggedIn = false),
+      ),
+    ];
+
+    final primaryColor = _getPrimaryColor();
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F0F14),
+      body: SafeArea(
+        child: IndexedStack(
+          index: _activeTabIndex,
+          children: screens,
         ),
       ),
-      bottomSheet: MediaQuery.of(context).size.width < 980
-          ? DraggableScrollableSheet(
-              expand: false,
-              initialChildSize: 0.48,
-              minChildSize: 0.2,
-              maxChildSize: 0.88,
-              builder: (context, scrollController) => _ResultPanel(
-                result: result,
-                error: error,
-                loading: loading,
-                scrollController: scrollController,
-              ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _activeTabIndex > 4 ? 4 : _activeTabIndex, // clamp settings tab indicator
+        onTap: (index) {
+          setState(() {
+            if (index == 4) {
+              // Redirect to Chat or Settings depending on tap
+              _activeTabIndex = 4;
+            } else {
+              _activeTabIndex = index;
+            }
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF1C1C24),
+        selectedItemColor: primaryColor,
+        unselectedItemColor: const Color(0xFF8B8A88),
+        selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontSize: 10),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: 'Dompet'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline_rounded), label: 'Catat'),
+          BottomNavigationBarItem(icon: Icon(Icons.analytics_rounded), label: 'Analisis'),
+          BottomNavigationBarItem(icon: Icon(Icons.forum_rounded), label: 'Tanya AI'),
+        ],
+      ),
+      // Floating Action Button: Kamera di Dashboard, Gear Settings di tab lain
+      floatingActionButton: _activeTabIndex == 0
+          ? FloatingActionButton(
+              onPressed: _showScanBonDialog,
+              backgroundColor: const Color(0xFF7F77DD),
+              tooltip: 'Pindai Struk OCR',
+              child: const Icon(Icons.photo_camera, color: Colors.black, size: 24),
             )
-          : null,
-    );
-  }
-}
-
-class _ControlPanel extends StatelessWidget {
-  const _ControlPanel({
-    required this.controller,
-    required this.demos,
-    required this.segment,
-    required this.docType,
-    required this.loading,
-    required this.onSegmentChanged,
-    required this.onDocTypeChanged,
-    required this.onAsk,
-    required this.onDemo,
-  });
-
-  final TextEditingController controller;
-  final List<DemoQuestion> demos;
-  final String segment;
-  final String docType;
-  final bool loading;
-  final ValueChanged<String> onSegmentChanged;
-  final ValueChanged<String> onDocTypeChanged;
-  final VoidCallback onAsk;
-  final ValueChanged<DemoQuestion> onDemo;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(20),
-      child: ListView(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF127C74),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.query_stats, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'FinSight AI',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      'RAG Finance Assistant',
-                      style: TextStyle(color: Color(0xFF5B6670)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const Text('Segmen', style: TextStyle(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 8),
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(
-                value: 'b2c',
-                label: Text('B2C'),
-                icon: Icon(Icons.person),
-              ),
-              ButtonSegment(
-                value: 'b2b',
-                label: Text('B2B'),
-                icon: Icon(Icons.apartment),
-              ),
-            ],
-            selected: {segment},
-            onSelectionChanged: (value) => onSegmentChanged(value.first),
-          ),
-          const SizedBox(height: 16),
-          const Text('Sumber', style: TextStyle(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 8),
-          DropdownButtonFormField<String>(
-            initialValue: docType,
-            decoration: const InputDecoration(border: OutlineInputBorder()),
-            items: const [
-              DropdownMenuItem(value: 'auto', child: Text('Auto detect')),
-              DropdownMenuItem(value: 'faq', child: Text('FAQ')),
-              DropdownMenuItem(value: 'policy', child: Text('Policy')),
-              DropdownMenuItem(value: 'transaksi', child: Text('Transaksi')),
-            ],
-            onChanged: (value) => onDocTypeChanged(value ?? 'auto'),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Pertanyaan',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: controller,
-            minLines: 5,
-            maxLines: 8,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Tulis pertanyaan user...',
-            ),
-          ),
-          const SizedBox(height: 12),
-          FilledButton.icon(
-            onPressed: loading ? null : onAsk,
-            icon: loading
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.send),
-            label: const Text('Run RAG Demo'),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Contoh Demo',
-            style: TextStyle(fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final demo in demos)
-                ActionChip(
-                  avatar: Icon(
-                    demo.segment == 'b2b' ? Icons.apartment : Icons.person,
-                    size: 18,
-                  ),
-                  label: Text(demo.label),
-                  onPressed: loading ? null : () => onDemo(demo),
-                ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const _InfoBox(),
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoBox extends StatelessWidget {
-  const _InfoBox();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF5F3),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFCDE7E1)),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Demo covers', style: TextStyle(fontWeight: FontWeight.w800)),
-          SizedBox(height: 8),
-          Text(
-            'RAG workflow, metadata filter, chunk evidence, guardrail out-of-domain, JSON output, dan Prisma MySQL schema.',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ResultPanel extends StatelessWidget {
-  const _ResultPanel({
-    required this.result,
-    required this.error,
-    required this.loading,
-    this.scrollController,
-  });
-
-  final Map<String, dynamic>? result;
-  final String? error;
-  final bool loading;
-  final ScrollController? scrollController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF5F7F8),
-      child: ListView(
-        controller: scrollController,
-        padding: const EdgeInsets.all(24),
-        children: [
-          Row(
-            children: [
-              const Expanded(
-                child: Text(
-                  'Structured RAG Output',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-                ),
-              ),
-              if (loading) const CircularProgressIndicator(),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (error != null)
-            _PanelCard(
-              child: Text(
-                error!,
-                style: const TextStyle(color: Color(0xFFB3261E)),
-              ),
-            ),
-          if (result == null && error == null)
-            const _PanelCard(
-              child: Text(
-                'Klik salah satu contoh demo atau tekan Run RAG Demo untuk melihat jawaban, evidence chunk, dan workflow.',
-              ),
-            ),
-          if (result != null) ...[
-            _AnswerCard(result: result!),
-            const SizedBox(height: 12),
-            _WorkflowCard(result: result!),
-            const SizedBox(height: 12),
-            _ChunksCard(result: result!),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _AnswerCard extends StatelessWidget {
-  const _AnswerCard({required this.result});
-
-  final Map<String, dynamic> result;
-
-  @override
-  Widget build(BuildContext context) {
-    final filter = result['metadata_filter'] as Map<String, dynamic>? ?? {};
-    return _PanelCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _Badge(label: 'Status: ${result['status'] ?? '-'}'),
-              _Badge(label: 'Segment: ${filter['user_segment'] ?? '-'}'),
-              _Badge(label: 'Doc: ${filter['doc_type'] ?? '-'}'),
-              _Badge(label: 'Kategori: ${filter['kategori'] ?? '-'}'),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Jawaban',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '${result['jawaban'] ?? '-'}',
-            style: const TextStyle(fontSize: 16, height: 1.4),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Rekomendasi',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '${result['rekomendasi'] ?? '-'}',
-            style: const TextStyle(height: 1.4),
-          ),
-          if (result['disclaimer'] != null) ...[
-            const SizedBox(height: 16),
-            Text(
-              '${result['disclaimer']}',
-              style: const TextStyle(
-                color: Color(0xFF5B6670),
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _WorkflowCard extends StatelessWidget {
-  const _WorkflowCard({required this.result});
-
-  final Map<String, dynamic> result;
-
-  @override
-  Widget build(BuildContext context) {
-    final workflow = (result['workflow'] as List<dynamic>? ?? [])
-        .cast<String>();
-    return _PanelCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'RAG Workflow',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (var i = 0; i < workflow.length; i++)
-                Chip(
-                  avatar: CircleAvatar(
-                    child: Text(
-                      '${i + 1}',
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  label: Text(workflow[i]),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ChunksCard extends StatelessWidget {
-  const _ChunksCard({required this.result});
-
-  final Map<String, dynamic> result;
-
-  @override
-  Widget build(BuildContext context) {
-    final chunks = result['retrieved_chunks'] as List<dynamic>? ?? [];
-    return _PanelCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Retrieved Chunks',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 12),
-          if (chunks.isEmpty)
-            const Text('Tidak ada chunk relevan yang melewati threshold.'),
-          for (final item in chunks)
-            Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFD8DEE4)),
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.white,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _Badge(label: '${item['chunk_id']}'),
-                      _Badge(label: 'score ${item['score']}'),
-                      _Badge(label: '${item['metadata']?['source'] ?? '-'}'),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${item['text']}',
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8EEF2),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-      ),
-    );
-  }
-}
-
-class _PanelCard extends StatelessWidget {
-  const _PanelCard({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE1E5EA)),
-      ),
-      child: child,
+          : _activeTabIndex != 5
+              ? FloatingActionButton(
+                  onPressed: () => setState(() => _activeTabIndex = 5),
+                  backgroundColor: const Color(0xFF1C1C24),
+                  mini: true,
+                  child: const Icon(Icons.settings, color: Colors.white70),
+                )
+              : null,
     );
   }
 }

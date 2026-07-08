@@ -1,4 +1,4 @@
-package com.example.finsight_ai_demo
+package com.example.cuanly
 
 import io.flutter.embedding.android.FlutterActivity
 

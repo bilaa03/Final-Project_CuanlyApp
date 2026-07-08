@@ -1,72 +1,155 @@
-import http from 'node:http';
-import { runRag, chunks, demoQuestions } from './ragEngine.js';
+import 'dotenv/config';
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { runRag, demoQuestions } from './ragEngine.js';
+import { closePrisma, getPrisma, getRagChunks, isPrismaConfigured, getUsers, createUser, getWallets, createWallet, getTransactions, createTransaction } from './db.js';
 
 const port = Number(process.env.PORT ?? 8787);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
-function sendJson(res, status, body) {
-  const data = JSON.stringify(body, null, 2);
-  res.writeHead(status, {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  });
-  res.end(data);
-}
+const app = express();
 
-function readBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk;
-      if (body.length > 1_000_000) req.destroy();
-    });
-    req.on('end', () => resolve(body));
-    req.on('error', reject);
-  });
-}
+app.use(express.json({ limit: '1mb' }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.json({ ok: true });
+  next();
+});
+app.use(express.static(PUBLIC_DIR));
 
-const server = http.createServer(async (req, res) => {
+app.get('/health', async (req, res, next) => {
   try {
-    if (req.method === 'OPTIONS') {
-      sendJson(res, 200, { ok: true });
-      return;
-    }
-
-    const url = new URL(req.url ?? '/', `http://${req.headers.host}`);
-
-    if (req.method === 'GET' && url.pathname === '/health') {
-      sendJson(res, 200, {
-        ok: true,
-        app: 'FinSight AI RAG API',
-        mode: process.env.USE_PRISMA === 'true' ? 'prisma-mysql' : 'local-json-demo',
-      });
-      return;
-    }
-
-    if (req.method === 'GET' && url.pathname === '/chunks') {
-      sendJson(res, 200, { count: chunks.length, chunks });
-      return;
-    }
-
-    if (req.method === 'GET' && url.pathname === '/demo-questions') {
-      sendJson(res, 200, { questions: demoQuestions });
-      return;
-    }
-
-    if (req.method === 'POST' && url.pathname === '/rag/query') {
-      const raw = await readBody(req);
-      const payload = raw ? JSON.parse(raw) : {};
-      sendJson(res, 200, runRag(payload));
-      return;
-    }
-
-    sendJson(res, 404, { error: 'Not found', paths: ['/health', '/chunks', '/demo-questions', '/rag/query'] });
+    res.json({
+      ok: true,
+      app: 'Cuanly RAG API',
+      framework: 'express',
+      database: isPrismaConfigured() ? 'prisma' : 'local-json-fallback',
+    });
   } catch (error) {
-    sendJson(res, 500, { error: error.message });
+    next(error);
   }
 });
 
-server.listen(port, () => {
-  console.log(`FinSight AI RAG API running on http://localhost:${port}`);
+app.get('/chunks', async (req, res, next) => {
+  try {
+    const chunks = await getRagChunks();
+    res.json({ count: chunks.length, chunks });
+  } catch (error) {
+    next(error);
+  }
 });
+
+app.get('/demo-questions', (req, res) => {
+  res.json({ questions: demoQuestions });
+});
+
+app.post('/auth/register', async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body ?? {};
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Nama, email, dan password wajib diisi.' });
+    }
+    const users = await getUsers();
+    if (users.some((u) => u.email === email)) {
+      return res.status(400).json({ error: 'Email sudah terdaftar.' });
+    }
+    const newUser = await createUser(name, email, password);
+    res.json({ ok: true, user: { name: newUser.name, email: newUser.email } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/auth/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body ?? {};
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email dan password wajib diisi.' });
+    }
+    const users = await getUsers();
+    const user = users.find((u) => u.email === email && u.password === password);
+    if (!user) {
+      return res.status(401).json({ error: 'Email atau password tidak sesuai.' });
+    }
+    res.json({ ok: true, user: { name: user.name, email: user.email } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/financial/data', async (req, res, next) => {
+  try {
+    const { email } = req.query ?? {};
+    if (!email) {
+      return res.status(400).json({ error: 'Email parameter is required' });
+    }
+    const wallets = await getWallets(email);
+    const transactions = await getTransactions(email);
+    res.json({ wallets, transactions });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/financial/wallet', async (req, res, next) => {
+  try {
+    const { email, name, balance, cardNumber, designType } = req.body ?? {};
+    if (!email || !name || balance === undefined || !cardNumber || !designType) {
+      return res.status(400).json({ error: 'All wallet fields are required' });
+    }
+    const wallet = await createWallet(email, name, Number(balance), cardNumber, designType);
+    res.json({ ok: true, wallet });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/financial/transaction', async (req, res, next) => {
+  try {
+    const { email, id, title, category, date, amount, isExpense, walletName } = req.body ?? {};
+    if (!email || !id || !title || !category || !date || amount === undefined || isExpense === undefined || !walletName) {
+      return res.status(400).json({ error: 'All transaction fields are required' });
+    }
+    const tx = await createTransaction(email, id, title, category, date, Number(amount), Boolean(isExpense), walletName);
+    res.json({ ok: true, transaction: tx });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/rag/query', async (req, res, next) => {
+  try {
+    res.json(await runRag(req.body ?? {}));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Not found',
+    paths: ['/health', '/chunks', '/demo-questions', '/rag/query'],
+  });
+});
+
+app.use((error, req, res, next) => {
+  res.status(500).json({ error: error.message });
+});
+
+if (isPrismaConfigured()) {
+  await getPrisma();
+}
+
+const server = app.listen(port, () => {
+  console.log(`Cuanly API running on http://localhost:${port}`);
+});
+
+process.on('SIGINT', async () => {
+  await closePrisma();
+  server.close(() => process.exit(0));
+});
+

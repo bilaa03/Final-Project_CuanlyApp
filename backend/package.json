@@ -1,18 +1,22 @@
 {
-  "name": "finsight-rag-api",
+  "name": "cuanly-rag-api",
   "version": "1.0.0",
   "private": true,
-  "description": "Local RAG API for FinSight AI Flutter demo with Prisma MySQL schema.",
+  "description": "Local RAG API for Cuanly Flutter demo with Express and Prisma.",
   "type": "module",
   "scripts": {
     "dev": "node src/server.js",
     "start": "node src/server.js",
+    "db:create": "node scripts/create-db.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.5",
     "prisma": "^6.19.0"
   }
 }

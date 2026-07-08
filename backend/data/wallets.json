@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Cash",
+    "balance": 0,
+    "cardNumber": "Fisik",
+    "designType": "slate",
+    "userEmail": "kazuuy"
+  },
+  {
+    "name": "Cash",
+    "balance": 0,
+    "cardNumber": "Fisik",
+    "designType": "slate",
+    "userEmail": "caca@cuanly.ai"
+  },
+  {
+    "name": "Cash",
+    "balance": 0,
+    "cardNumber": "Fisik",
+    "designType": "slate",
+    "userEmail": "nitnit"
+  },
+  {
+    "name": "Cash",
+    "balance": 0,
+    "cardNumber": "Fisik",
+    "designType": "slate",
+    "userEmail": "thea@cuanly.ai"
+  },
+  {
+    "name": "Bank Mandiri",
+    "balance": 3500000,
+    "cardNumber": "•••• 8821",
+    "designType": "blue",
+    "userEmail": "bilaa@cuanly.ai"
+  },
+  {
+    "name": "GoPay",
+    "balance": 500000,
+    "cardNumber": "0812 •••• 9012",
+    "designType": "teal",
+    "userEmail": "bilaa@cuanly.ai"
+  },
+  {
+    "name": "OVO",
+    "balance": 200000,
+    "cardNumber": "0812 •••• 9012",
+    "designType": "purple",
+    "userEmail": "bilaa@cuanly.ai"
+  },
+  {
+    "name": "Cash",
+    "balance": 0,
+    "cardNumber": "Fisik",
+    "designType": "slate",
+    "userEmail": "bilaa@cuanly.ai"
+  }
+]

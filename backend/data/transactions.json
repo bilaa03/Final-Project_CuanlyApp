@@ -1,0 +1,42 @@
+[
+  {
+    "id": "t1",
+    "title": "Restoran & Coffee Shop",
+    "category": "Makanan",
+    "date": "2026-07-03T04:46:27.792Z",
+    "amount": 650000,
+    "isExpense": true,
+    "walletName": "Cash",
+    "userEmail": "bilaa@cuanly.ai"
+  },
+  {
+    "id": "t2",
+    "title": "Grab Ride",
+    "category": "Transport",
+    "date": "2026-07-01T05:31:27.792Z",
+    "amount": 320000,
+    "isExpense": true,
+    "walletName": "GoPay",
+    "userEmail": "bilaa@cuanly.ai"
+  },
+  {
+    "id": "t3",
+    "title": "Belanja Indomaret",
+    "category": "Belanja",
+    "date": "2026-07-03T01:31:27.792Z",
+    "amount": 430000,
+    "isExpense": true,
+    "walletName": "Bank Mandiri",
+    "userEmail": "bilaa@cuanly.ai"
+  },
+  {
+    "id": "t4",
+    "title": "Gaji Bulanan",
+    "category": "Pemasukan",
+    "date": "2026-06-30T05:31:27.792Z",
+    "amount": 3500000,
+    "isExpense": false,
+    "walletName": "Bank Mandiri",
+    "userEmail": "bilaa@cuanly.ai"
+  }
+]

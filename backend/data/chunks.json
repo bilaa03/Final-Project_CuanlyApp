@@ -1,7 +1,7 @@
 [
   {
     "id": "faq_001",
-    "text": "Q1: Bagaimana cara FinSight AI menghitung status budget saya?\nA1: FinSight AI menjumlahkan seluruh transaksi pada periode yang dipilih, lalu membandingkannya dengan budget bulanan yang kamu tetapkan. Jika total pengeluaran di bawah 80% budget, status AMAN. Jika 80-100%, status WASPADA. Jika melebihi 100%, status KRITIS.",
+    "text": "Q1: Bagaimana cara Cuanly menghitung status budget saya?\nA1: Cuanly menjumlahkan seluruh transaksi pada periode yang dipilih, lalu membandingkannya dengan budget bulanan yang kamu tetapkan. Jika total pengeluaran di bawah 80% budget, status AMAN. Jika 80-100%, status WASPADA. Jika melebihi 100%, status KRITIS.",
     "source": "faq_keuangan_pribadi.md",
     "docType": "faq",
     "kategori": "Budget",
@@ -11,7 +11,7 @@
   },
   {
     "id": "faq_002",
-    "text": "Q2: Kategori apa saja yang dilacak oleh FinSight AI?\nA2: Kategori standar yang dilacak adalah Makan, Transport, Belanja, Tagihan, Hiburan, dan Kesehatan. Kamu bisa menambah kategori custom melalui menu Pengaturan > Kategori.",
+    "text": "Q2: Kategori apa saja yang dilacak oleh Cuanly?\nA2: Kategori standar yang dilacak adalah Makan, Transport, Belanja, Tagihan, Hiburan, dan Kesehatan. Kamu bisa menambah kategori custom melalui menu Pengaturan > Kategori.",
     "source": "faq_keuangan_pribadi.md",
     "docType": "faq",
     "kategori": "Kategori",
@@ -41,7 +41,7 @@
   },
   {
     "id": "faq_005",
-    "text": "Q5: Apakah FinSight AI bisa memberi saran investasi?\nA5: Tidak. FinSight AI hanya menganalisis pola pengeluaran dan memberi rekomendasi penghematan berbasis data transaksi. FinSight AI bukan penasihat keuangan profesional dan tidak memberikan saran investasi atau produk keuangan apa pun.",
+    "text": "Q5: Apakah Cuanly bisa memberi saran investasi?\nA5: Tidak. Cuanly hanya menganalisis pola pengeluaran dan memberi rekomendasi penghematan berbasis data transaksi. Cuanly bukan penasihat keuangan profesional dan tidak memberikan saran investasi atau produk keuangan apa pun.",
     "source": "faq_keuangan_pribadi.md",
     "docType": "faq",
     "kategori": "Disclaimer",
@@ -51,7 +51,7 @@
   },
   {
     "id": "faq_006",
-    "text": "Q6: Bagaimana FinSight AI menjaga privasi data keuangan saya?\nA6: Data transaksi disimpan secara lokal terenkripsi di perangkat. FinSight AI hanya mengirim kategori dan jumlah transaksi ke AI untuk dianalisis, bukan nama merchant, nama lengkap, atau nomor rekening.",
+    "text": "Q6: Bagaimana Cuanly menjaga privasi data keuangan saya?\nA6: Data transaksi disimpan secara lokal terenkripsi di perangkat. Cuanly hanya mengirim kategori dan jumlah transaksi ke AI untuk dianalisis, bukan nama merchant, nama lengkap, atau nomor rekening.",
     "source": "faq_keuangan_pribadi.md",
     "docType": "faq",
     "kategori": "Privasi",
@@ -61,7 +61,7 @@
   },
   {
     "id": "faq_007",
-    "text": "Q7: Apa yang terjadi jika data transaksi saya tidak lengkap?\nA7: FinSight AI tidak akan menebak atau mengarang angka yang tidak ada. Jika data tidak lengkap, AI akan meminta klarifikasi atau data tambahan sebelum memberikan analisis.",
+    "text": "Q7: Apa yang terjadi jika data transaksi saya tidak lengkap?\nA7: Cuanly tidak akan menebak atau mengarang angka yang tidak ada. Jika data tidak lengkap, AI akan meminta klarifikasi atau data tambahan sebelum memberikan analisis.",
     "source": "faq_keuangan_pribadi.md",
     "docType": "faq",
     "kategori": "Data Tidak Lengkap",

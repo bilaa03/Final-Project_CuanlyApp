@@ -1,6 +1,6 @@
 {
-    "name": "finsight_ai_demo",
-    "short_name": "finsight_ai_demo",
+    "name": "cuanly",
+    "short_name": "cuanly",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

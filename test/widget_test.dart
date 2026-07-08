@@ -7,13 +7,13 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:finsight_ai_demo/main.dart';
+import 'package:cuanly/main.dart';
 
 void main() {
-  testWidgets('FinSight demo screen smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(const FinSightApp());
+  testWidgets('cuanly demo screen smoke test', (WidgetTester tester) async {
+    await tester.pumpWidget(const CuanlyApp());
 
-    expect(find.text('FinSight AI'), findsOneWidget);
+    expect(find.text('Cuanly'), findsOneWidget);
     expect(find.text('Run RAG Demo'), findsOneWidget);
     expect(find.text('Contoh Demo'), findsOneWidget);
   });
