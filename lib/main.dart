@@ -115,7 +115,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
 
   // AI Chat states
   // Gunakan http://10.0.2.2:8787 untuk Android Emulator, atau http://localhost:8787 untuk Web/Windows Desktop
-  final String _apiBaseUrl ='https://final-project-cuanlyapp-production.up.railway.app';
+  final String _apiBaseUrl ='https://final-projectcuanlyapp-production.up.railway.app';
   final List<ChatMsg> _chatHistory = [];
   bool _chatLoading = false;
   String _activeChatSegment = 'b2c';
