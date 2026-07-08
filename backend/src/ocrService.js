@@ -77,7 +77,9 @@ export async function extractReceiptData(base64Image, mimeType = 'image/jpeg') {
       );
 
       data = await response.json().catch(() => ({}));
-      if (response.ok) break;
+      const message = data.error?.message || '';
+      const modelMissing = response.status === 404 || /not found|not supported/i.test(message);
+      if (response.ok || !modelMissing) break;
     } catch (err) {
       console.error(`Failed to call Gemini model ${candidateModel}:`, err.message);
     }
