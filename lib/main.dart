@@ -376,6 +376,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
                 this.context,
                 MaterialPageRoute(
                   builder: (context) => CameraScanScreen(
+                    apiBaseUrl: _apiBaseUrl,
                     onScanSuccess: (title, amount, category, wallet) {
                       _addTransaction(title, amount, category, true, wallet);
                       ScaffoldMessenger.of(this.context).showSnackBar(
@@ -464,6 +465,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
         onSegmentChanged: (seg) => setState(() => _activeChatSegment = seg),
         roastMode: _roastMode,
         onRoastModeChanged: (val) => setState(() => _roastMode = val),
+        onSettingsClick: () => setState(() => _activeTabIndex = 5),
       ),
       SettingsScreen(
         userName: _userName,
@@ -522,7 +524,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
               tooltip: 'Pindai Struk OCR',
               child: const Icon(Icons.photo_camera, color: Colors.black, size: 24),
             )
-          : _activeTabIndex != 5
+          : (_activeTabIndex != 4 && _activeTabIndex != 5) // Hide on Chat (4) and Settings (5)
               ? FloatingActionButton(
                   onPressed: () => setState(() => _activeTabIndex = 5),
                   backgroundColor: const Color(0xFF1C1C24),

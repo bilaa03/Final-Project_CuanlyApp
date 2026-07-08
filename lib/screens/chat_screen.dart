@@ -12,6 +12,7 @@ class ChatScreen extends StatefulWidget {
   final Function(String) onSegmentChanged;
   final bool roastMode;
   final ValueChanged<bool> onRoastModeChanged;
+  final VoidCallback? onSettingsClick;
 
   const ChatScreen({
     super.key,
@@ -24,6 +25,7 @@ class ChatScreen extends StatefulWidget {
     required this.onSegmentChanged,
     required this.roastMode,
     required this.onRoastModeChanged,
+    this.onSettingsClick,
   });
 
   @override
@@ -121,6 +123,11 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
+          if (widget.onSettingsClick != null)
+            IconButton(
+              icon: const Icon(Icons.settings, color: Colors.white70, size: 20),
+              onPressed: widget.onSettingsClick,
+            ),
         ],
       ),
       body: Column(

@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { runRag, demoQuestions } from './ragEngine.js';
 import { closePrisma, getPrisma, getRagChunks, isPrismaConfigured, getUsers, createUser, getWallets, createWallet, getTransactions, createTransaction } from './db.js';
+import { extractReceiptData } from './ocrService.js';
 
 const port = Number(process.env.PORT ?? 8787);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,7 +12,7 @@ const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
 const app = express();
 
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -116,6 +117,19 @@ app.post('/financial/transaction', async (req, res, next) => {
     }
     const tx = await createTransaction(email, id, title, category, date, Number(amount), Boolean(isExpense), walletName);
     res.json({ ok: true, transaction: tx });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/financial/ocr', async (req, res, next) => {
+  try {
+    const { image, mimeType } = req.body ?? {};
+    if (!image) {
+      return res.status(400).json({ error: 'Image parameter is required' });
+    }
+    const result = await extractReceiptData(image, mimeType);
+    res.json({ ok: true, data: result });
   } catch (error) {
     next(error);
   }
