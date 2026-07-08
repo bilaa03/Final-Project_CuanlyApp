@@ -330,7 +330,18 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
         _chatHistory.add(ChatMsg(
           isUser: false,
           text: answerText,
-          directAnswer: answerText.contains('Rp') ? 'Rp ${answerText.split("Rp")[1].split(" ")[0]}' : null,
+          directAnswer: (() {
+            if (!answerText.contains('Rp')) return null;
+            try {
+              var amt = answerText.split('Rp')[1].trim().split(' ')[0];
+              while (amt.endsWith('.') || amt.endsWith(',')) {
+                amt = amt.substring(0, amt.length - 1);
+              }
+              return 'Rp $amt';
+            } catch (_) {
+              return null;
+            }
+          })(),
           contextBadge: answerText.contains('naik') ? '▲ Naik' : answerText.contains('turun') ? '▼ Turun' : '■ Stabil',
           rekomendasi: recs,
           retrievedChunks: data['retrieved_chunks'],
