@@ -194,12 +194,50 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
           wallet: 'Bank Mandiri',
         ),
       ];
-    } else {
-      // Akun baru dibuat kosong
-      _wallets.add(
-        WalletItem(name: 'Cash', balance: 0.0, cardNumber: 'Fisik', designType: 'slate'),
-      );
-      _transactions = [];
+    }
+  }
+
+  Future<void> _fetchFinancialData(String email) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_apiBaseUrl/financial/data?email=$email'),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> walletsData = data['wallets'] ?? [];
+        final List<dynamic> txsData = data['transactions'] ?? [];
+
+        setState(() {
+          _wallets.clear();
+          for (var w in walletsData) {
+            _wallets.add(WalletItem(
+              name: w['name'] ?? 'Cash',
+              balance: (w['balance'] as num).toDouble(),
+              cardNumber: w['cardNumber'] ?? 'Fisik',
+              designType: w['designType'] ?? 'slate',
+            ));
+          }
+
+          _transactions.clear();
+          for (var t in txsData) {
+            _transactions.add(TransactionItem(
+              id: t['id'] ?? '',
+              title: t['title'] ?? '',
+              category: t['category'] ?? '',
+              date: DateTime.parse(t['date'] ?? DateTime.now().toIso8601String()),
+              amount: (t['amount'] as num).toDouble(),
+              isExpense: t['isExpense'] ?? true,
+              wallet: t['walletName'] ?? 'Cash',
+            ));
+          }
+        });
+      } else {
+        throw Exception();
+      }
+    } catch (_) {
+      // Fallback to local hardcoded initial mock data
+      _initializeUserData(email);
     }
   }
 
@@ -403,28 +441,92 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
       return AuthScreen(
         users: _users,
         currentAccent: widget.currentAccent,
-        onLogin: (email, pass) {
-          final found = _users.any((u) => u.email == email && u.password == pass);
-          if (found) {
-            setState(() {
-              _isLoggedIn = true;
-              _userEmail = email;
-              _userName = email.split('@')[0];
-              _initializeUserData(email);
-            });
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Email atau password tidak sesuai!'), backgroundColor: Color(0xFFE24B4A)),
-            );
+        onLogin: (email, pass) async {
+          try {
+            final response = await http.post(
+              Uri.parse('$_apiBaseUrl/auth/login'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({'email': email, 'password': pass}),
+            ).timeout(const Duration(seconds: 10));
+
+            if (response.statusCode == 200) {
+              final data = jsonDecode(response.body);
+              final user = data['user'];
+              final name = user['name'] ?? email.split('@')[0];
+
+              setState(() {
+                _isLoggedIn = true;
+                _userEmail = email;
+                _userName = name;
+              });
+
+              await _fetchFinancialData(email);
+            } else {
+              final errData = jsonDecode(response.body);
+              final errMsg = errData['error'] ?? 'Email atau password tidak sesuai!';
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errMsg), backgroundColor: const Color(0xFFE24B4A)),
+              );
+            }
+          } catch (e) {
+            // Local offline fallback
+            final found = _users.any((u) => u.email == email && u.password == pass);
+            if (found) {
+              setState(() {
+                _isLoggedIn = true;
+                _userEmail = email;
+                _userName = email.split('@')[0];
+                _initializeUserData(email);
+              });
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Terhubung dalam Mode Offline (Lokal).'), backgroundColor: Colors.orange),
+              );
+            } else {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Koneksi server gagal.'), backgroundColor: Color(0xFFE24B4A)),
+              );
+            }
           }
         },
-        onRegister: (name, email, pass) {
-          setState(() {
-            _users.add(UserAccount(name: name, email: email, password: pass));
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registrasi Sukses! Silakan login.'), backgroundColor: Color(0xFF10B981)),
-          );
+        onRegister: (name, email, pass) async {
+          try {
+            final response = await http.post(
+              Uri.parse('$_apiBaseUrl/auth/register'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({'name': name, 'email': email, 'password': pass}),
+            ).timeout(const Duration(seconds: 10));
+
+            if (response.statusCode == 200) {
+              setState(() {
+                if (!_users.any((u) => u.email == email)) {
+                  _users.add(UserAccount(name: name, email: email, password: pass));
+                }
+              });
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Registrasi Sukses! Silakan login.'), backgroundColor: Color(0xFF10B981)),
+              );
+            } else {
+              final errData = jsonDecode(response.body);
+              final errMsg = errData['error'] ?? 'Registrasi gagal.';
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errMsg), backgroundColor: const Color(0xFFE24B4A)),
+              );
+            }
+          } catch (e) {
+            // Local fallback
+            setState(() {
+              _users.add(UserAccount(name: name, email: email, password: pass));
+            });
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Registrasi Lokal Sukses (Mode Offline)! Silakan login.'), backgroundColor: Colors.orange),
+            );
+          }
         },
       );
     }
