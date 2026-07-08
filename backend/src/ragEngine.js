@@ -488,15 +488,8 @@ async function answerWithGemini({ question, retrieval, userSegment }) {
   }
 
   if (!response?.ok) {
-    return {
-      status: 'error',
-      jawaban: 'Request ke Gemini API gagal.',
-      rekomendasi: data.error?.message
-        ? `Periksa konfigurasi API: ${data.error.message}`
-        : 'Periksa GEMINI_API_KEY, model, koneksi internet, dan kuota Gemini API.',
-      source: sources,
-      disclaimer: 'Jawaban tidak dibuat karena backend gagal menghubungi Gemini API.',
-    };
+    console.warn('Gemini API call failed. Falling back to local simulation:', data.error?.message || 'Unknown error');
+    return answerFromContext(question, retrieval, userSegment);
   }
 
   const outputText = data.candidates?.[0]?.content?.parts
