@@ -141,10 +141,149 @@ class AnalysisScreen extends StatelessWidget {
                 ),
               );
             }),
+            const SizedBox(height: 24),
+            
+            const Text('Statistik Belanja', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black.withOpacity(0.04)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.01),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Rata-rata Harian', style: TextStyle(color: Color(0xFF64748B), fontSize: 10, fontWeight: FontWeight.bold)),
+                            Text('📅', style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Rp ${NumberFormat.format(totalExpenses / 30)}',
+                          style: const TextStyle(color: Color(0xFF0F172A), fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black.withOpacity(0.04)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.01),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Frekuensi Belanja', style: TextStyle(color: Color(0xFF64748B), fontSize: 10, fontWeight: FontWeight.bold)),
+                            Text('🛍️', style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${expenses.length} Kali',
+                          style: const TextStyle(color: Color(0xFF0F172A), fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // AI Smart Tip Box
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: primaryColor.withOpacity(0.12)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text('💡', style: TextStyle(fontSize: 14)),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Rekomendasi Cerdas Cuanly',
+                        style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _getAiTip(categorySums, totalExpenses),
+                    style: const TextStyle(
+                      color: Color(0xFF475569),
+                      fontSize: 11,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ],
       ),
     );
+  }
+
+  String _getAiTip(Map<String, double> categorySums, double totalExpenses) {
+    if (totalExpenses == 0) return 'Pertahankan pola hemat Anda untuk bulan ini!';
+    
+    String highestCategory = '';
+    double highestAmount = 0;
+    for (var entry in categorySums.entries) {
+      if (entry.value > highestAmount) {
+        highestAmount = entry.value;
+        highestCategory = entry.key;
+      }
+    }
+    if (highestCategory == 'Makanan') {
+      return 'Pengeluaran Makanan Anda paling dominan (${(highestAmount / totalExpenses * 100).toStringAsFixed(0)}%). Cobalah batasi frekuensi makan di luar atau mulai bawa bekal makan siang untuk menghemat hingga 20% anggaran!';
+    } else if (highestCategory == 'Transport') {
+      return 'Biaya transportasi Anda bulan ini cukup tinggi. Manfaatkan promo langganan ojek online atau beralih ke transportasi umum jika memungkinkan.';
+    } else if (highestCategory == 'Belanja') {
+      return 'Pengeluaran belanja bulanan Anda cukup besar. Pastikan membuat daftar belanjaan yang mendetail terlebih dahulu untuk menghindari pembelian impulsif.';
+    } else if (highestCategory.isNotEmpty) {
+      return 'Kategori $highestCategory menyerap porsi anggaran terbesar. Tetapkan limit pengeluaran yang lebih ketat agar tabungan Anda meningkat.';
+    }
+    return 'Pertahankan pola keuangan sehat Anda untuk meningkatkan rasio tabungan bulan ini!';
   }
 
   String formatIDR(double amount) {

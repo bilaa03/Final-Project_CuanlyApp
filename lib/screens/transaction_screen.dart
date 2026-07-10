@@ -343,9 +343,11 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        items: widget.wallets.map((w) {
-                          return DropdownMenuItem(value: w.name, child: Text(w.name));
-                        }).toList(),
+                        items: widget.wallets.isEmpty
+                            ? [const DropdownMenuItem(value: 'Cash', child: Text('Cash'))]
+                            : widget.wallets.map((w) {
+                                return DropdownMenuItem(value: w.name, child: Text(w.name));
+                              }).toList(),
                         onChanged: (val) {
                           if (val != null) {
                             setState(() {
