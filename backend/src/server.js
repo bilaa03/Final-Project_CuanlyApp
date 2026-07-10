@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { runRag, demoQuestions } from './ragEngine.js';
-import { closePrisma, getPrisma, getRagChunks, isPrismaConfigured, getUsers, createUser, getWallets, createWallet, getTransactions, createTransaction } from './db.js';
+import { closePrisma, getPrisma, getRagChunks, isPrismaConfigured, getUsers, createUser, getWallets, createWallet, getTransactions, createTransaction, transferWalletBalance } from './db.js';
 import { extractReceiptData } from './ocrService.js';
 
 const port = Number(process.env.PORT ?? 8787);
@@ -117,6 +117,19 @@ app.post('/financial/transaction', async (req, res, next) => {
     }
     const tx = await createTransaction(email, id, title, category, date, Number(amount), Boolean(isExpense), walletName);
     res.json({ ok: true, transaction: tx });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/financial/transfer', async (req, res, next) => {
+  try {
+    const { email, fromWallet, toWallet, amount } = req.body ?? {};
+    if (!email || !fromWallet || !toWallet || !amount) {
+      return res.status(400).json({ error: 'All transfer fields are required' });
+    }
+    const result = await transferWalletBalance(email, fromWallet, toWallet, Number(amount));
+    res.json({ ok: true, result });
   } catch (error) {
     next(error);
   }

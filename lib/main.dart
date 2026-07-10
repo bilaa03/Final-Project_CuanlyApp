@@ -115,7 +115,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
 
   // AI Chat states
   // Gunakan http://10.0.2.2:8787 untuk Android Emulator, atau http://localhost:8787 untuk Web/Windows Desktop
-  final String _apiBaseUrl = 'https://final-projectcuanlyapp-production.up.railway.app';
+  final String _apiBaseUrl = 'final-projectcuanlyapp-production.up.railway.app';
   final List<ChatMsg> _chatHistory = [];
   bool _chatLoading = false;
   String _activeChatSegment = 'b2c';
@@ -286,6 +286,19 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
       fWallet.balance -= amount;
       tWallet.balance += amount;
     });
+
+    if (_isLoggedIn) {
+      http.post(
+        Uri.parse('$_apiBaseUrl/financial/transfer'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': _userEmail,
+          'fromWallet': from,
+          'toWallet': to,
+          'amount': amount,
+        }),
+      ).catchError((_) => http.Response('Offline Fallback', 200));
+    }
   }
 
   Future<void> _askRAG(String question) async {

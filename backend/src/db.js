@@ -464,3 +464,61 @@ export async function createTransaction(email, id, title, category, dateStr, amo
     return newTx;
   }
 }
+
+export async function transferWalletBalance(email, fromWalletName, toWalletName, amount) {
+  const client = await getPrisma();
+
+  if (!client) {
+    const allWallets = await readLocalWallets();
+    const fromIdx = allWallets.findIndex(w => w.userEmail === email && w.name === fromWalletName);
+    const toIdx = allWallets.findIndex(w => w.userEmail === email && w.name === toWalletName);
+    
+    if (fromIdx !== -1 && toIdx !== -1) {
+      allWallets[fromIdx].balance -= amount;
+      allWallets[toIdx].balance += amount;
+      await fs.writeFile(localWalletsPath, JSON.stringify(allWallets, null, 2), 'utf8');
+      localWalletsCache = allWallets;
+      return { success: true };
+    }
+    throw new Error('Wallet not found locally');
+  }
+
+  try {
+    const fromWallet = await client.wallet.findFirst({
+      where: { userEmail: email, name: fromWalletName }
+    });
+    const toWallet = await client.wallet.findFirst({
+      where: { userEmail: email, name: toWalletName }
+    });
+
+    if (!fromWallet || !toWallet) {
+      throw new Error('One or both wallets not found in database');
+    }
+
+    await client.wallet.update({
+      where: { id: fromWallet.id },
+      data: { balance: fromWallet.balance - amount }
+    });
+
+    await client.wallet.update({
+      where: { id: toWallet.id },
+      data: { balance: toWallet.balance + amount }
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.warn('Gagal memproses transfer di database, menggunakan fallback JSON lokal:', error.message);
+    const allWallets = await readLocalWallets();
+    const fromIdx = allWallets.findIndex(w => w.userEmail === email && w.name === fromWalletName);
+    const toIdx = allWallets.findIndex(w => w.userEmail === email && w.name === toWalletName);
+    
+    if (fromIdx !== -1 && toIdx !== -1) {
+      allWallets[fromIdx].balance -= amount;
+      allWallets[toIdx].balance += amount;
+      await fs.writeFile(localWalletsPath, JSON.stringify(allWallets, null, 2), 'utf8');
+      localWalletsCache = allWallets;
+      return { success: true };
+    }
+    throw error;
+  }
+}
