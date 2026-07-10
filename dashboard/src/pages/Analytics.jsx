@@ -144,7 +144,7 @@ export function Analytics({ transactions, budgetLimit }) {
   }, [transactions, drillDownCategory]);
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-white">
+    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-cuanly-textDark">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h2 className="text-2xl font-black tracking-tight">Analitik Finansial</h2>
@@ -152,7 +152,7 @@ export function Analytics({ transactions, budgetLimit }) {
         </div>
         <button 
           onClick={handleExportCSV}
-          className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white/5 border border-cuanly-border hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+          className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white border border-slate-200 hover:bg-slate-50 text-cuanly-textDark transition-colors duration-200 cursor-pointer"
         >
           <Download size={14} className="text-cuanly-mint" />
           <span>Ekspor CSV</span>
@@ -162,8 +162,8 @@ export function Analytics({ transactions, budgetLimit }) {
       {/* Main Grid: Pie Chart + Period Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Pie Chart / Donut drill down */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
-          <h3 className="text-base font-bold mb-1">Distribusi Pengeluaran</h3>
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
+          <h3 className="text-base font-bold text-cuanly-textDark mb-1">Distribusi Pengeluaran</h3>
           <p className="text-xs text-cuanly-textMuted mb-6">Klik kategori grafik untuk melihat rincian transaksi</p>
 
           <div className="flex flex-col sm:flex-row items-center justify-around h-60">
@@ -187,7 +187,7 @@ export function Analytics({ transactions, budgetLimit }) {
                           <Cell 
                             key={`cell-${index}`} 
                             fill={COLORS[index % COLORS.length]} 
-                            stroke={drillDownCategory === entry.name ? '#fff' : 'none'}
+                            stroke={drillDownCategory === entry.name ? '#0f172a' : 'none'}
                             strokeWidth={2}
                           />
                         ))}
@@ -205,12 +205,12 @@ export function Analytics({ transactions, budgetLimit }) {
                       onClick={() => setDrillDownCategory(entry.name)}
                       className={`flex items-center space-x-2 text-xs font-bold px-3 py-1.5 rounded-lg border transition-all duration-200 ${
                         drillDownCategory === entry.name 
-                          ? 'bg-white/10 border-white/20' 
-                          : 'border-transparent hover:bg-white/5'
+                          ? 'bg-slate-100 border-slate-200 text-cuanly-textDark' 
+                          : 'border-transparent text-slate-600 hover:bg-slate-50'
                       }`}
                     >
                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }}></span>
-                      <span className="text-gray-300">{entry.name}:</span>
+                      <span className="text-slate-600">{entry.name}:</span>
                       <span>{formatIDR(entry.value)}</span>
                     </button>
                   ))}
@@ -221,12 +221,12 @@ export function Analytics({ transactions, budgetLimit }) {
 
           {/* Drilldown details wrapper */}
           {drillDownCategory && (
-            <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/5 animate-fadeIn">
+            <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200/50 animate-fadeIn">
               <div className="flex justify-between items-center mb-3">
-                <h4 className="text-xs font-bold text-cuanly-violetLight uppercase tracking-wider">Detail Kategori: {drillDownCategory}</h4>
+                <h4 className="text-xs font-bold text-cuanly-violet uppercase tracking-wider">Detail Kategori: {drillDownCategory}</h4>
                 <button 
                   onClick={() => setDrillDownCategory(null)}
-                  className="text-[10px] font-bold text-cuanly-textMuted hover:text-white"
+                  className="text-[10px] font-bold text-cuanly-textMuted hover:text-cuanly-textDark"
                 >
                   Tutup Rincian
                 </button>
@@ -236,8 +236,8 @@ export function Analytics({ transactions, budgetLimit }) {
                   <p className="text-[11px] text-cuanly-textMuted">Tidak ada pengeluaran di kategori ini.</p>
                 ) : (
                   drillDownDetails.map((tx, idx) => (
-                    <div key={idx} className="flex justify-between items-center text-xs py-1.5 border-b border-white/5 last:border-0">
-                      <span className="text-white font-medium">{tx.title}</span>
+                    <div key={idx} className="flex justify-between items-center text-xs py-1.5 border-b border-slate-200/50 last:border-0">
+                      <span className="text-cuanly-textDark font-medium">{tx.title}</span>
                       <span className="font-bold text-cuanly-coral">{formatIDR(tx.amount)}</span>
                     </div>
                   ))
@@ -248,20 +248,20 @@ export function Analytics({ transactions, budgetLimit }) {
         </div>
 
         {/* Period Comparison Chart */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
-          <h3 className="text-base font-bold mb-1">Perbandingan Antar Periode</h3>
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
+          <h3 className="text-base font-bold text-cuanly-textDark mb-1">Perbandingan Antar Periode</h3>
           <p className="text-xs text-cuanly-textMuted mb-6">Bulan Lalu vs Bulan Ini per kategori pengeluaran</p>
 
           <div className="h-60">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="#8B8A88" fontSize={11} tickLine={false} />
-                <YAxis stroke="#8B8A88" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${v/1000}k`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} />
+                <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${v/1000}k`} />
                 <Tooltip formatter={(v) => formatIDR(v)} />
                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                <Bar dataKey="Bulan Lalu" fill="#534AB7" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Bulan Ini" fill="#1D9E75" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Bulan Lalu" fill="#818cf8" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Bulan Ini" fill="#059669" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -269,10 +269,10 @@ export function Analytics({ transactions, budgetLimit }) {
       </div>
 
       {/* Transaction Table Section */}
-      <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+      <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h3 className="text-base font-bold">Riwayat Transaksi</h3>
+            <h3 className="text-base font-bold text-cuanly-textDark">Riwayat Transaksi</h3>
             <p className="text-xs text-cuanly-textMuted mt-0.5">Daftar transaksi terperinci yang dicatat sistem</p>
           </div>
 
@@ -286,7 +286,7 @@ export function Analytics({ transactions, budgetLimit }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Cari transaksi..."
-                className="w-full sm:w-48 bg-white/5 border border-cuanly-border rounded-xl pl-9 pr-4 py-2 text-xs focus:border-cuanly-violet focus:outline-none transition-colors duration-200"
+                className="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-xs focus:border-cuanly-violet focus:outline-none text-cuanly-textDark transition-colors duration-200"
               />
             </div>
 
@@ -294,7 +294,7 @@ export function Analytics({ transactions, budgetLimit }) {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-cuanly-card border border-cuanly-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cuanly-violet cursor-pointer"
+              className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-cuanly-textDark focus:outline-none focus:border-cuanly-violet cursor-pointer"
             >
               <option value="All">Kategori: Semua</option>
               {categoriesList.filter(c => c !== 'All').map((cat) => (
@@ -306,7 +306,7 @@ export function Analytics({ transactions, budgetLimit }) {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="bg-cuanly-card border border-cuanly-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cuanly-violet cursor-pointer"
+              className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-cuanly-textDark focus:outline-none focus:border-cuanly-violet cursor-pointer"
             >
               <option value="All">Semua Transaksi</option>
               <option value="Expense">Pengeluaran</option>
@@ -321,21 +321,21 @@ export function Analytics({ transactions, budgetLimit }) {
             <thead>
               <tr className="border-b border-cuanly-border text-cuanly-textMuted text-xs font-bold uppercase tracking-wider">
                 <th className="py-3 px-4">
-                  <button onClick={() => handleSort('title')} className="flex items-center space-x-1 hover:text-white transition-colors duration-150">
+                  <button onClick={() => handleSort('title')} className="flex items-center space-x-1 hover:text-cuanly-textDark transition-colors duration-150">
                     <span>Transaksi</span>
                     {sortField === 'title' && (sortOrder === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
                   </button>
                 </th>
                 <th className="py-3 px-4">Kategori</th>
                 <th className="py-3 px-4">
-                  <button onClick={() => handleSort('date')} className="flex items-center space-x-1 hover:text-white transition-colors duration-150">
+                  <button onClick={() => handleSort('date')} className="flex items-center space-x-1 hover:text-cuanly-textDark transition-colors duration-150">
                     <span>Tanggal</span>
                     {sortField === 'date' && (sortOrder === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
                   </button>
                 </th>
                 <th className="py-3 px-4">Metode/Dompet</th>
                 <th className="py-3 px-4 text-right">
-                  <button onClick={() => handleSort('amount')} className="flex items-center space-x-1 hover:text-white transition-colors duration-150 ml-auto">
+                  <button onClick={() => handleSort('amount')} className="flex items-center space-x-1 hover:text-cuanly-textDark transition-colors duration-150 ml-auto">
                     <span>Jumlah</span>
                     {sortField === 'amount' && (sortOrder === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
                   </button>
@@ -351,15 +351,15 @@ export function Analytics({ transactions, budgetLimit }) {
                 </tr>
               ) : (
                 filteredAndSortedTransactions.map((tx) => (
-                  <tr key={tx.id} className="border-b border-white/5 hover:bg-white/5 transition-colors duration-150 text-xs">
-                    <td className="py-4 px-4 font-semibold flex items-center space-x-3">
+                  <tr key={tx.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-150 text-xs">
+                    <td className="py-4 px-4 font-semibold flex items-center space-x-3 text-cuanly-textDark">
                       <div className={`p-2 rounded-lg ${tx.isExpense ? 'bg-cuanly-coral/10 text-cuanly-coral' : 'bg-cuanly-mint/10 text-cuanly-mint'}`}>
                         {tx.isExpense ? <TrendingDown size={14} /> : <TrendingUp size={14} />}
                       </div>
                       <span>{tx.title}</span>
                     </td>
-                    <td className="py-4 px-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/5 border border-white/10">
+                    <td className="py-4 px-4 text-cuanly-textDark">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-50 border border-slate-200">
                         {tx.category}
                       </span>
                     </td>
@@ -372,8 +372,8 @@ export function Analytics({ transactions, budgetLimit }) {
                         minute: '2-digit'
                       })}
                     </td>
-                    <td className="py-4 px-4 font-semibold text-gray-300">{tx.wallet}</td>
-                    <td className={`py-4 px-4 text-right font-black ${tx.isExpense ? 'text-white' : 'text-cuanly-mint'}`}>
+                    <td className="py-4 px-4 font-semibold text-cuanly-textDark">{tx.wallet}</td>
+                    <td className={`py-4 px-4 text-right font-black ${tx.isExpense ? 'text-cuanly-textDark' : 'text-cuanly-mint'}`}>
                       {tx.isExpense ? '-' : '+'} {formatIDR(tx.amount)}
                     </td>
                   </tr>

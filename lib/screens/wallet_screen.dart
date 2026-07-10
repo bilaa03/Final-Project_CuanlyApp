@@ -45,11 +45,11 @@ class _WalletScreenState extends State<WalletScreen> {
   Color _getPrimaryColor() {
     switch (widget.currentAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669);
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8);
       default:
-        return const Color(0xFFCCA352);
+        return const Color(0xFFD97706);
     }
   }
 
@@ -58,11 +58,11 @@ class _WalletScreenState extends State<WalletScreen> {
     final primaryColor = _getPrimaryColor();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('Dompet Cuanly Anda', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Dompet Cuanly Anda', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 12),
           
           // Wallets cards list
@@ -85,16 +85,23 @@ class _WalletScreenState extends State<WalletScreen> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF1C1C24),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.015),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
             ),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Pindahkan Saldo (Transfer)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                  const Text('Pindahkan Saldo (Transfer)', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
                   const SizedBox(height: 16),
                   
                   // From and To dropdowns
@@ -103,12 +110,12 @@ class _WalletScreenState extends State<WalletScreen> {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           initialValue: _fromWallet,
-                          dropdownColor: const Color(0xFF1C1C24),
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          dropdownColor: Colors.white,
+                          style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                           decoration: const InputDecoration(
                             labelText: 'Dari Dompet',
-                            labelStyle: TextStyle(color: Color(0xFF8B8A88), fontSize: 11),
-                            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+                            labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
                           ),
                           items: widget.wallets.map((w) {
                             return DropdownMenuItem(value: w.name, child: Text(w.name));
@@ -126,12 +133,12 @@ class _WalletScreenState extends State<WalletScreen> {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           initialValue: _toWallet,
-                          dropdownColor: const Color(0xFF1C1C24),
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          dropdownColor: Colors.white,
+                          style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                           decoration: const InputDecoration(
                             labelText: 'Ke Dompet',
-                            labelStyle: TextStyle(color: Color(0xFF8B8A88), fontSize: 11),
-                            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+                            labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
                           ),
                           items: widget.wallets.map((w) {
                             return DropdownMenuItem(value: w.name, child: Text(w.name));
@@ -152,17 +159,17 @@ class _WalletScreenState extends State<WalletScreen> {
                   // Amount text field
                   TextFormField(
                     controller: _amountController,
-                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                    style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Jumlah Transfer (Rupiah)',
-                      labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                      labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.white12),
+                        borderSide: const BorderSide(color: Colors.black12),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor),
+                        borderSide: BorderSide(color: primaryColor, width: 1.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
@@ -180,6 +187,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () {
@@ -204,7 +212,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           );
                         }
                       },
-                      child: const Text('Kirim Saldo', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12)),
+                      child: const Text('Kirim Saldo', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                     ),
                   )
                 ],
@@ -217,26 +225,34 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Widget _buildCardItem(WalletItem w) {
-    // Card styles mapping
-    Color cardColor = const Color(0xFF1D4ED8); // Blue Mandiri default
+    // Card styles mapping with premium bright gradients
+    Color startColor = const Color(0xFF2563EB); // Blue Mandiri
+    Color endColor = const Color(0xFF60A5FA);
     if (w.designType == 'teal') {
-      cardColor = const Color(0xFF0D9488);
+      startColor = const Color(0xFF0D9488);
+      endColor = const Color(0xFF2DD4BF);
     } else if (w.designType == 'purple') {
-      cardColor = const Color(0xFF7C3AED);
+      startColor = const Color(0xFF7C3AED);
+      endColor = const Color(0xFFA78BFA);
     } else if (w.designType == 'slate') {
-      cardColor = const Color(0xFF475569);
+      startColor = const Color(0xFF475569);
+      endColor = const Color(0xFF94A3B8);
     }
 
     return Container(
       width: 280,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cardColor,
+        gradient: LinearGradient(
+          colors: [startColor, endColor],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: cardColor.withValues(alpha: 0.3),
-            blurRadius: 10,
+            color: startColor.withOpacity(0.25),
+            blurRadius: 12,
             offset: const Offset(0, 6),
           )
         ],

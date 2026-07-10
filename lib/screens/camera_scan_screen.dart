@@ -4,14 +4,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'home_screen.dart';
 
 class CameraScanScreen extends StatefulWidget {
   final String apiBaseUrl;
+  final String currentAccent;
   final Function(String title, double amount, String category, String wallet) onScanSuccess;
 
   const CameraScanScreen({
     super.key,
     required this.apiBaseUrl,
+    required this.currentAccent,
     required this.onScanSuccess,
   });
 
@@ -45,6 +48,17 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
   void dispose() {
     _scannerController.dispose();
     super.dispose();
+  }
+
+  Color _getPrimaryColor() {
+    switch (widget.currentAccent) {
+      case 'emerald':
+        return const Color(0xFF059669);
+      case 'sapphire':
+        return const Color(0xFF1D4ED8);
+      default:
+        return const Color(0xFFD97706);
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -90,7 +104,6 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
     });
 
     try {
-      // 1. Fetch API Key dynamically from backend
       final keyUri = Uri.parse('${widget.apiBaseUrl}/financial/ocr/key');
       final keyResponse = await http.get(keyUri).timeout(const Duration(seconds: 10));
       if (keyResponse.statusCode != 200) {
@@ -102,15 +115,12 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
         throw Exception('API Key Gemini belum diset di server Railway Anda.');
       }
 
-      // 2. Read image bytes and convert to Base64
       final bytes = await _selectedImage!.readAsBytes();
       final base64Image = base64Encode(bytes);
       
-      // Extract file extension to determine mimeType
       final extension = _selectedImage!.path.split('.').last.toLowerCase();
       final mimeType = (extension == 'png') ? 'image/png' : 'image/jpeg';
 
-      // 3. Request Gemini Multimodal API directly from device (using client residential IP)
       final geminiUri = Uri.parse(
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey',
       );
@@ -173,7 +183,6 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
           _statusText = 'Pemindaian sukses!';
         });
 
-        // Show success message briefly before returning
         await Future.delayed(const Duration(milliseconds: 500));
 
         if (mounted) {
@@ -186,7 +195,6 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
           Navigator.pop(context);
         }
       } else {
-        // Try parsing google error message
         String errorMsg = 'Google API error ${response.statusCode}';
         try {
           final errData = jsonDecode(response.body);
@@ -218,19 +226,19 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = const Color(0xFFCCA352); // Gold theme color
+    final themeColor = _getPrimaryColor();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: const Text(
           'Pindai Struk Belanja',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close, color: Color(0xFF64748B)),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -245,15 +253,21 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                     aspectRatio: 3 / 4,
                     child: Stack(
                       children: [
-                        // Border viewfinder
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: _isScanning ? themeColor : Colors.white24,
+                              color: _isScanning ? themeColor : Colors.black.withOpacity(0.06),
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xFF161620),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.02),
+                                blurRadius: 16,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(18),
@@ -269,23 +283,20 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Opacity(
-                                          opacity: 0.25,
+                                          opacity: 0.15,
                                           child: Icon(
                                             Icons.receipt_long_rounded,
                                             size: 100,
-                                            color: Colors.white,
+                                            color: Color(0xFF0F172A),
                                           ),
                                         ),
                                         SizedBox(height: 16),
-                                        Opacity(
-                                          opacity: 0.6,
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 24.0),
-                                            child: Text(
-                                              'Ambil foto struk belanja Anda untuk dibaca otomatis oleh AI',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.white, fontSize: 13),
-                                            ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 24.0),
+                                          child: Text(
+                                            'Ambil foto struk belanja Anda untuk dibaca otomatis oleh AI',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(color: Color(0xFF64748B), fontSize: 13),
                                           ),
                                         ),
                                       ],
@@ -294,13 +305,11 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                           ),
                         ),
 
-                        // Corner decorations
-                        _buildCornerMarker(top: 0, left: 0, color: _isScanning ? themeColor : Colors.white70),
-                        _buildCornerMarker(top: 0, right: 0, color: _isScanning ? themeColor : Colors.white70),
-                        _buildCornerMarker(bottom: 0, left: 0, color: _isScanning ? themeColor : Colors.white70),
-                        _buildCornerMarker(bottom: 0, right: 0, color: _isScanning ? themeColor : Colors.white70),
+                        _buildCornerMarker(top: 0, left: 0, color: _isScanning ? themeColor : Colors.black38),
+                        _buildCornerMarker(top: 0, right: 0, color: _isScanning ? themeColor : Colors.black38),
+                        _buildCornerMarker(bottom: 0, left: 0, color: _isScanning ? themeColor : Colors.black38),
+                        _buildCornerMarker(bottom: 0, right: 0, color: _isScanning ? themeColor : Colors.black38),
 
-                        // Scan laser animation
                         if (_isScanning)
                           AnimatedBuilder(
                             animation: _scannerAnimation,
@@ -315,7 +324,7 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                                     color: themeColor,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: themeColor.withValues(alpha: 0.8),
+                                        color: themeColor.withOpacity(0.8),
                                         blurRadius: 10,
                                         spreadRadius: 2,
                                       )
@@ -332,27 +341,33 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
               ),
             ),
             
-            // Status bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               margin: const EdgeInsets.symmetric(horizontal: 24),
               decoration: BoxDecoration(
-                color: const Color(0xFF161620),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white10),
+                border: Border.all(color: Colors.black.withOpacity(0.05)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.015),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (_isScanning)
-                    const Padding(
-                      padding: EdgeInsets.only(right: 12.0),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
                       child: SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFCCA352)),
+                          valueColor: AlwaysStoppedAnimation<Color>(themeColor),
                         ),
                       ),
                     ),
@@ -361,7 +376,7 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                       _statusText,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF0F172A),
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -373,7 +388,6 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
             
             const SizedBox(height: 24),
 
-            // Controls buttons
             Padding(
               padding: const EdgeInsets.only(bottom: 36, left: 24, right: 24),
               child: Row(
@@ -381,11 +395,11 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _isScanning ? null : () => _pickImage(ImageSource.camera),
-                      icon: const Icon(Icons.camera_alt_rounded),
-                      label: const Text('Ambil Foto'),
+                      icon: const Icon(Icons.camera_alt_rounded, color: Colors.white),
+                      label: const Text('Ambil Foto', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: themeColor,
-                        foregroundColor: Colors.black,
+                        elevation: 0,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -398,10 +412,10 @@ class _CameraScanScreenState extends State<CameraScanScreen> with SingleTickerPr
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: _isScanning ? null : () => _pickImage(ImageSource.gallery),
-                      icon: const Icon(Icons.photo_library_rounded, color: Colors.white),
-                      label: const Text('Galeri Foto', style: TextStyle(color: Colors.white)),
+                      icon: const Icon(Icons.photo_library_rounded, color: Color(0xFF64748B)),
+                      label: const Text('Galeri Foto', style: TextStyle(color: Color(0xFF64748B))),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white24),
+                        side: const BorderSide(color: Colors.black12),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

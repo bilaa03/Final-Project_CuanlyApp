@@ -15,11 +15,11 @@ class AnalysisScreen extends StatelessWidget {
   Color _getPrimaryColor() {
     switch (currentAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669);
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8);
       default:
-        return const Color(0xFFCCA352);
+        return const Color(0xFFD97706);
     }
   }
 
@@ -37,32 +37,42 @@ class AnalysisScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('Analisis Pengeluaran', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Analisis Pengeluaran', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 18),
           
           if (expenses.isEmpty)
             Container(
               padding: const EdgeInsets.all(40),
               alignment: Alignment.center,
-              child: const Text('Belum ada transaksi pengeluaran dicatat.', style: TextStyle(color: Color(0xFF8B8A88))),
+              child: const Text('Belum ada transaksi pengeluaran dicatat.', style: TextStyle(color: Color(0xFF64748B))),
             )
           else ...[
-            // Total Expenses summary card
+            // Total Expenses summary card with brand gradient
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF1C1C24),
+                gradient: LinearGradient(
+                  colors: [primaryColor, primaryColor.withOpacity(0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Total Belanja Bulan Ini', style: TextStyle(color: Color(0xFF8B8A88), fontSize: 11)),
+                  const Text('Total Belanja Bulan Ini', style: TextStyle(color: Colors.white70, fontSize: 11)),
                   const SizedBox(height: 6),
                   Text(
                     'Rp ${NumberFormat.format(totalExpenses)}',
@@ -73,7 +83,7 @@ class AnalysisScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             
-            const Text('Pembagian Kategori', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text('Pembagian Kategori', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 12),
 
             // Category percentages lists
@@ -86,16 +96,23 @@ class AnalysisScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C24),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+                  border: Border.all(color: Colors.black.withOpacity(0.04)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.01),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    )
+                  ],
                 ),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(cat, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                        Text(cat, style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 12)),
                         Text(
                           '${(pct * 100).toStringAsFixed(0)}% (${formatIDR(amt)})',
                           style: TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.bold),
@@ -109,7 +126,7 @@ class AnalysisScreen extends StatelessWidget {
                         Container(
                           height: 6,
                           width: double.infinity,
-                          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.04), borderRadius: BorderRadius.circular(3)),
+                          decoration: BoxDecoration(color: Colors.black.withOpacity(0.04), borderRadius: BorderRadius.circular(3)),
                         ),
                         FractionallySizedBox(
                           widthFactor: pct,

@@ -37,23 +37,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _localLimit = widget.budgetLimit;
   }
 
+  Color _getPrimaryColor() {
+    switch (widget.currentAccent) {
+      case 'emerald':
+        return const Color(0xFF059669);
+      case 'sapphire':
+        return const Color(0xFF1D4ED8);
+      default:
+        return const Color(0xFFD97706);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final primaryColor = _getPrimaryColor();
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('Pengaturan Akun', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Pengaturan Akun', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 18),
 
           // Profile card
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF1C1C24),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.015),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
             ),
             child: Row(
               children: [
@@ -62,14 +82,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Rotating/pulsing border ring representation
+                      // Rotating Sweep gradient ring
                       Container(
                         width: 56,
                         height: 56,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: SweepGradient(
-                            colors: [Color(0xFF534AB7), Color(0xFF1D9E75), Color(0xFF7F77DD), Color(0xFF534AB7)],
+                            colors: [Color(0xFF4F46E5), Color(0xFF10B981), Color(0xFF818CF8), Color(0xFF4F46E5)],
                           ),
                         ),
                       ),
@@ -93,13 +113,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.userName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                      Text(widget.userName, style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
                       const SizedBox(height: 4),
-                      Text(widget.userEmail, style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11)),
+                      Text(widget.userEmail, style: const TextStyle(color: Color(0xFF64748B), fontSize: 11)),
                       const SizedBox(height: 6),
-                      const Text(
+                      Text(
                         'Ketuk foto untuk ganti avatar',
-                        style: TextStyle(color: Color(0xFF7F77DD), fontSize: 9, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: primaryColor, fontSize: 9, fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
@@ -110,24 +130,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 24),
 
           // Budget limit setup
-          const Text('Limit Anggaran Bulanan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+          const Text('Limit Anggaran Bulanan', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF1C1C24),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.015),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
             ),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Batas Maksimal Pengeluaran', style: TextStyle(color: Color(0xFF8B8A88), fontSize: 11)),
+                    const Text('Batas Maksimal Pengeluaran', style: TextStyle(color: Color(0xFF64748B), fontSize: 11)),
                     Text(
                       'Rp ${(_localLimit / 1000000).toStringAsFixed(1)} Juta',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                      style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ],
                 ),
@@ -136,8 +163,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   min: 1000000,
                   max: 10000000,
                   divisions: 18,
-                  activeColor: const Color(0xFF7F77DD),
-                  inactiveColor: Colors.white12,
+                  activeColor: primaryColor,
+                  inactiveColor: Colors.black.withOpacity(0.06),
                   onChanged: (val) {
                     setState(() {
                       _localLimit = val;
@@ -151,21 +178,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 24),
 
           // Theme accent setup
-          const Text('Tema Warna Aplikasi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+          const Text('Tema Warna Aplikasi', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF1C1C24),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.015),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildAccentButton('gold', const Color(0xFFCCA352), 'Emas'),
-                _buildAccentButton('emerald', const Color(0xFF10B981), 'Mint'),
-                _buildAccentButton('sapphire', const Color(0xFF3B82F6), 'Biru'),
+                _buildAccentButton('gold', const Color(0xFFD97706), 'Emas'),
+                _buildAccentButton('emerald', const Color(0xFF059669), 'Mint'),
+                _buildAccentButton('sapphire', const Color(0xFF1D4ED8), 'Biru'),
               ],
             ),
           ),
@@ -202,19 +236,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: color,
               shape: BoxShape.circle,
               border: isSelected ? Border.all(color: Colors.white, width: 3) : null,
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: color.withValues(alpha: 0.4),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      )
-                    ]
-                  : null,
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(isSelected ? 0.4 : 0.1),
+                  blurRadius: 8,
+                  spreadRadius: isSelected ? 2 : 0,
+                )
+              ],
             ),
           ),
           const SizedBox(height: 8),
-          Text(name, style: TextStyle(color: isSelected ? Colors.white : const Color(0xFF8B8A88), fontSize: 11, fontWeight: FontWeight.bold)),
+          Text(name, style: TextStyle(color: isSelected ? const Color(0xFF0F172A) : const Color(0xFF64748B), fontSize: 11, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -223,13 +255,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   LinearGradient _getAvatarGradient() {
     switch (widget.userAvatar) {
       case 'emerald':
-        return const LinearGradient(colors: [Color(0xFF1D9E75), Color(0xFF10B981)]);
+        return const LinearGradient(colors: [Color(0xFF059669), Color(0xFF34D399)]);
       case 'coral':
-        return const LinearGradient(colors: [Color(0xFFD85A30), Color(0xFFEF9F27)]);
+        return const LinearGradient(colors: [Color(0xFFEA580C), Color(0xFFFDBA74)]);
       case 'gold':
-        return const LinearGradient(colors: [Color(0xFFCCA352), Color(0xFFE5C158)]);
+        return const LinearGradient(colors: [Color(0xFFD97706), Color(0xFFFBBF24)]);
       default:
-        return const LinearGradient(colors: [Color(0xFF534AB7), Color(0xFF7F77DD)]);
+        return const LinearGradient(colors: [Color(0xFF4F46E5), Color(0xFF818CF8)]);
     }
   }
 
@@ -237,24 +269,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1C1C24),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Pilih Avatar Siluet Anda', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+        title: const Text('Pilih Avatar Siluet Anda', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 15)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
               'Pilih salah satu gradasi siluet premium Cuanly di bawah ini:',
-              style: TextStyle(color: Color(0xFF8B8A88), fontSize: 11, height: 1.4),
+              style: TextStyle(color: Color(0xFF64748B), fontSize: 11, height: 1.4),
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildAvatarOption('violet', const LinearGradient(colors: [Color(0xFF534AB7), Color(0xFF7F77DD)])),
-                _buildAvatarOption('emerald', const LinearGradient(colors: [Color(0xFF1D9E75), Color(0xFF10B981)])),
-                _buildAvatarOption('coral', const LinearGradient(colors: [Color(0xFFD85A30), Color(0xFFEF9F27)])),
-                _buildAvatarOption('gold', const LinearGradient(colors: [Color(0xFFCCA352), Color(0xFFE5C158)])),
+                _buildAvatarOption('violet', const LinearGradient(colors: [Color(0xFF4F46E5), Color(0xFF818CF8)])),
+                _buildAvatarOption('emerald', const LinearGradient(colors: [Color(0xFF059669), Color(0xFF34D399)])),
+                _buildAvatarOption('coral', const LinearGradient(colors: [Color(0xFFEA580C), Color(0xFFFDBA74)])),
+                _buildAvatarOption('gold', const LinearGradient(colors: [Color(0xFFD97706), Color(0xFFFBBF24)])),
               ],
             )
           ],
@@ -277,7 +309,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           shape: BoxShape.circle,
           gradient: gradient,
           border: Border.all(
-            color: isSelected ? Colors.white : Colors.transparent,
+            color: isSelected ? const Color(0xFF0F172A) : Colors.transparent,
             width: 2,
           ),
         ),

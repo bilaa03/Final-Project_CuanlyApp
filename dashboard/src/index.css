@@ -2,24 +2,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @theme {
-  --color-cuanly-bg: transparent;
-  --color-cuanly-card: #1c1a2d;
-  --color-cuanly-violet: #534AB7;
-  --color-cuanly-violetLight: #7F77DD;
-  --color-cuanly-mint: #1D9E75;
-  --color-cuanly-coral: #D85A30;
-  --color-cuanly-green: #639922;
-  --color-cuanly-yellow: #EF9F27;
-  --color-cuanly-red: #E24B4A;
-  --color-cuanly-border: rgba(255, 255, 255, 0.05);
-  --color-cuanly-textMuted: #8B8A88;
+  --color-cuanly-bg: #f8fafc;
+  --color-cuanly-card: #ffffff;
+  --color-cuanly-violet: #4f46e5;
+  --color-cuanly-violetLight: #818cf8;
+  --color-cuanly-mint: #059669;
+  --color-cuanly-coral: #ea580c;
+  --color-cuanly-green: #10b981;
+  --color-cuanly-yellow: #f59e0b;
+  --color-cuanly-red: #ef4444;
+  --color-cuanly-border: rgba(0, 0, 0, 0.05);
+  --color-cuanly-textMuted: #64748b;
+  --color-cuanly-textDark: #0f172a;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at 80% 20%, #1d1847 0%, #100d28 40%, #080713 100%);
-  color: #ffffff;
+  background: #f8fafc;
+  color: #0f172a;
   overflow-x: hidden;
   min-height: 100vh;
 }
@@ -30,14 +31,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #080713;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.18);
 }
 
 @keyframes spin-slow {

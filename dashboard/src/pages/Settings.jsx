@@ -58,7 +58,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
   };
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-white">
+    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-cuanly-textDark">
       <div className="mb-8">
         <h2 className="text-2xl font-black tracking-tight">Pengaturan</h2>
         <p className="text-sm text-cuanly-textMuted mt-1">Konfigurasi profil personal dan dompet akun Anda.</p>
@@ -66,15 +66,15 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* User Profile Settings Form */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
-          <div className="flex items-center space-x-2 text-cuanly-violetLight mb-6">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
+          <div className="flex items-center space-x-2 text-cuanly-violet mb-6">
             <User size={20} />
-            <h3 className="text-base font-bold text-white">Profil Pengguna</h3>
+            <h3 className="text-base font-bold text-cuanly-textDark">Profil Pengguna</h3>
           </div>
 
           <form onSubmit={handleUpdateProfileSubmit} className="space-y-5">
             {/* Avatar upload representation */}
-            <div className="flex items-center space-x-4 p-4 rounded-xl bg-white/5 border border-cuanly-border">
+            <div className="flex items-center space-x-4 p-4 rounded-xl bg-slate-50 border border-slate-200/50">
               <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-cuanly-violet/40 bg-gradient-to-tr from-cuanly-violet/80 via-cuanly-violetLight/80 to-cuanly-mint/40 flex items-center justify-center">
                 {profileAvatar ? (
                   <img
@@ -89,7 +89,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                 )}
               </div>
               <div className="flex-1">
-                <label className="text-xs text-white font-bold block mb-1">Foto Profil Baru</label>
+                <label className="text-xs text-cuanly-textDark font-bold block mb-1">Foto Profil Baru</label>
                 <div className="relative">
                   <input
                     type="file"
@@ -100,7 +100,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                   />
                   <label
                     htmlFor="avatar-upload-input"
-                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-cuanly-violet/20 hover:bg-cuanly-violet/30 border border-cuanly-violet/40 text-[11px] font-bold text-cuanly-violetLight cursor-pointer transition-colors"
+                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-cuanly-violet/10 hover:bg-cuanly-violet/20 border border-cuanly-violet/20 text-[11px] font-bold text-cuanly-violet cursor-pointer transition-colors"
                   >
                     <Upload size={12} />
                     <span>Pilih Berkas Foto</span>
@@ -116,7 +116,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                 value={profileName}
                 onChange={(e) => setProfileName(e.target.value)}
                 placeholder="Masukkan nama lengkap"
-                className="w-full bg-white/5 border border-cuanly-border rounded-xl px-4 py-3 text-sm focus:border-cuanly-violet focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-cuanly-textDark focus:border-cuanly-violet focus:outline-none placeholder-slate-400"
               />
             </div>
 
@@ -127,7 +127,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                 value={profileEmail}
                 onChange={(e) => setProfileEmail(e.target.value)}
                 placeholder="bilaa@cuanly.ai"
-                className="w-full bg-white/5 border border-cuanly-border rounded-xl px-4 py-3 text-sm focus:border-cuanly-violet focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-cuanly-textDark focus:border-cuanly-violet focus:outline-none placeholder-slate-400"
               />
             </div>
 
@@ -141,10 +141,10 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
         </div>
 
         {/* Add Wallet Form */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex items-center space-x-2 text-cuanly-mint mb-6">
             <CreditCard size={20} />
-            <h3 className="text-base font-bold text-white">Tambah Dompet Baru</h3>
+            <h3 className="text-base font-bold text-cuanly-textDark">Tambah Dompet Baru</h3>
           </div>
 
           <form onSubmit={handleAddWalletSubmit} className="space-y-4">
@@ -155,7 +155,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                 value={walletName}
                 onChange={(e) => setWalletName(e.target.value)}
                 placeholder="Mandiri, Gopay, OVO..."
-                className="w-full bg-white/5 border border-cuanly-border rounded-xl px-4 py-3 text-sm focus:border-cuanly-violet focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-cuanly-textDark focus:border-cuanly-violet focus:outline-none placeholder-slate-400"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -166,7 +166,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                   value={walletBalance}
                   onChange={(e) => setWalletBalance(e.target.value)}
                   placeholder="3000000"
-                  className="w-full bg-white/5 border border-cuanly-border rounded-xl px-4 py-3 text-sm focus:border-cuanly-violet focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-cuanly-textDark focus:border-cuanly-violet focus:outline-none placeholder-slate-400"
                 />
               </div>
               <div>
@@ -176,7 +176,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                   value={walletCardNumber}
                   onChange={(e) => setWalletCardNumber(e.target.value)}
                   placeholder="•••• 1234 atau HP"
-                  className="w-full bg-white/5 border border-cuanly-border rounded-xl px-4 py-3 text-sm focus:border-cuanly-violet focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-cuanly-textDark focus:border-cuanly-violet focus:outline-none placeholder-slate-400"
                 />
               </div>
             </div>
@@ -190,7 +190,7 @@ export function Settings({ budgetLimit, onUpdateBudgetLimit, wallets, onAddWalle
                     type="button"
                     onClick={() => setWalletDesign(theme)}
                     className={`w-10 h-10 rounded-xl border-2 transition-all ${
-                      walletDesign === theme ? 'border-white scale-110' : 'border-transparent opacity-60'
+                      walletDesign === theme ? 'border-cuanly-violet scale-110' : 'border-transparent opacity-60'
                     } ${
                       theme === 'blue' ? 'bg-blue-600' :
                       theme === 'teal' ? 'bg-teal-600' :

@@ -132,15 +132,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final double budgetPct = widget.budgetLimit > 0 ? (totalBudgetUsed / widget.budgetLimit) : 0.0;
     
     // Semantic color coding for budget progress bar
-    Color budgetColor = const Color(0xFF639922); // Green
+    Color budgetColor = const Color(0xFF059669); // Green
     if (budgetPct > 0.9) {
-      budgetColor = const Color(0xFFE24B4A); // Red
+      budgetColor = const Color(0xFFEF4444); // Red
     } else if (budgetPct > 0.7) {
-      budgetColor = const Color(0xFFEF9F27); // Yellow
+      budgetColor = const Color(0xFFF59E0B); // Yellow/Amber
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         children: [
@@ -187,9 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFFD85A30).withValues(alpha: 0.12),
+            color: const Color(0xFFD85A30).withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFD85A30).withValues(alpha: 0.3)),
+            border: Border.all(color: const Color(0xFFD85A30).withOpacity(0.2)),
           ),
           child: const Row(
             children: [
@@ -220,11 +220,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1C1C24),
+                      color: Colors.white,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                      border: Border.all(color: Colors.black.withOpacity(0.06)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.02),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
                     ),
-                    child: const Icon(Icons.notifications_active, color: Color(0xFF7F77DD), size: 16),
+                    child: const Icon(Icons.notifications_active, color: Color(0xFF6366F1), size: 16),
                   ),
                   Positioned(
                     top: 2,
@@ -233,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 7,
                       height: 7,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFE24B4A),
+                        color: Color(0xFFEF4444),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -253,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            backgroundColor: const Color(0xFF1C1C24),
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             title: Row(
               children: [
@@ -261,18 +268,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             content: Text(
               description,
-              style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 14),
+              style: const TextStyle(color: Color(0xFF475569), fontSize: 14),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Keren!', style: TextStyle(color: Color(0xFF7F77DD))),
+                child: const Text('Keren!', style: TextStyle(color: Color(0xFF6366F1), fontWeight: FontWeight.bold)),
               )
             ],
           ),
@@ -281,9 +288,16 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: const Color(0xFF1C1C24),
+          color: Colors.white,
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          border: Border.all(color: Colors.black.withOpacity(0.06)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            )
+          ],
         ),
         child: Text(emoji, style: const TextStyle(fontSize: 16)),
       ),
@@ -295,17 +309,17 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF534AB7), Color(0xFF7F77DD)],
+          colors: [Color(0xFF4F46E5), Color(0xFF818CF8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF534AB7).withValues(alpha: 0.3),
-            blurRadius: 15,
-            spreadRadius: 2,
-            offset: const Offset(0, 8),
+            color: const Color(0xFF4F46E5).withOpacity(0.25),
+            blurRadius: 20,
+            spreadRadius: 1,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -328,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
+                    color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Row(
@@ -368,16 +382,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.12),
+                        color: Colors.white.withOpacity(0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_upward, color: Color(0xFF1D9E75), size: 14),
+                      child: const Icon(Icons.arrow_upward, color: Color(0xFF34D399), size: 14),
                     ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Pemasukan', style: TextStyle(color: Colors.white60, fontSize: 11)),
+                        const Text('Pemasukan', style: TextStyle(color: Colors.white70, fontSize: 11)),
                         Text(
                           'Rp ${NumberFormat.format(widget.totalPemasukan)}',
                           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
@@ -395,16 +409,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.12),
+                        color: Colors.white.withOpacity(0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_downward, color: Color(0xFFD85A30), size: 14),
+                      child: const Icon(Icons.arrow_downward, color: Color(0xFFF87171), size: 14),
                     ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Pengeluaran', style: TextStyle(color: Colors.white60, fontSize: 11)),
+                        const Text('Pengeluaran', style: TextStyle(color: Colors.white70, fontSize: 11)),
                         Text(
                           'Rp ${NumberFormat.format(widget.totalPengeluaran)}',
                           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
@@ -425,9 +439,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C24),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.015),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Text(
                 'Batas Anggaran Bulanan',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF0F172A),
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
@@ -466,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 8,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.06),
+                      color: Colors.black.withOpacity(0.04),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -479,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(4),
                         boxShadow: [
                           BoxShadow(
-                            color: budgetColor.withValues(alpha: 0.4),
+                            color: budgetColor.withOpacity(0.2),
                             blurRadius: 6,
                             spreadRadius: 1,
                           )
@@ -497,11 +518,11 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 'Terpakai: Rp ${NumberFormat.format(totalBudgetUsed)}',
-                style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11),
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
               ),
               Text(
                 'Limit: Rp ${NumberFormat.format(widget.budgetLimit)}',
-                style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11),
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
               ),
             ],
           ),
@@ -517,9 +538,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C24),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.015),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,7 +559,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Text(
                 'Analisis Kategori',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF0F172A),
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
@@ -539,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.chevron_left, color: Colors.white70, size: 20),
+                    icon: const Icon(Icons.chevron_left, color: Color(0xFF475569), size: 20),
                     onPressed: _selectedMonthIndex > 0
                         ? () => setState(() {
                               _selectedMonthIndex--;
@@ -549,10 +577,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text(
                     _months[_selectedMonthIndex],
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                    style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 12),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.chevron_right, color: Colors.white70, size: 20),
+                    icon: const Icon(Icons.chevron_right, color: Color(0xFF475569), size: 20),
                     onPressed: _selectedMonthIndex < _months.length - 1
                         ? () => setState(() {
                               _selectedMonthIndex++;
@@ -621,12 +649,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: const Color(0xFF0F172A),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
                                 'Rp ${NumberFormat.format(catAmt)}',
-                                style: const TextStyle(color: Colors.black, fontSize: 9, fontWeight: FontWeight.bold),
+                                style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -639,8 +667,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: isSelected
-                                    ? [const Color(0xFF1D9E75), const Color(0xFF10B981)]
-                                    : [const Color(0xFF534AB7), const Color(0xFF7F77DD)],
+                                    ? [const Color(0xFF059669), const Color(0xFF10B981)]
+                                    : [const Color(0xFFC7D2FE), const Color(0xFF818CF8)],
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
                               ),
@@ -648,7 +676,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
-                                        color: const Color(0xFF1D9E75).withValues(alpha: 0.4),
+                                        color: const Color(0xFF059669).withOpacity(0.3),
                                         blurRadius: 8,
                                         spreadRadius: 1,
                                       )
@@ -660,7 +688,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             catName.substring(0, min(3, catName.length)),
                             style: TextStyle(
-                              color: isSelected ? Colors.white : const Color(0xFF8B8A88),
+                              color: isSelected ? const Color(0xFF0F172A) : const Color(0xFF64748B),
                               fontSize: 11,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             ),
@@ -680,18 +708,18 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
+                color: const Color(0xFFF1F5F9),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline, color: Color(0xFF1D9E75), size: 18),
+                  const Icon(Icons.info_outline, color: Color(0xFF059669), size: 18),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Total pengeluaran kategori $_tappedCategory bulan ${_months[_selectedMonthIndex]} adalah Rp ${NumberFormat.format(_tappedCategoryAmount!)}.',
-                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      style: const TextStyle(color: Color(0xFF334155), fontSize: 12),
                     ),
                   ),
                 ],
@@ -715,7 +743,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Text(
               'Aktivitas Terakhir',
               style: TextStyle(
-                color: Colors.white,
+                color: Color(0xFF0F172A),
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -724,7 +752,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => widget.onNavigateToTab(2), // Route to Transaction screen
               child: const Text(
                 'Lihat Semua',
-                style: TextStyle(color: Color(0xFF7F77DD), fontWeight: FontWeight.bold, fontSize: 13),
+                style: TextStyle(color: Color(0xFF6366F1), fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ),
           ],
@@ -736,7 +764,7 @@ class _HomeScreenState extends State<HomeScreen> {
             alignment: Alignment.center,
             child: const Text(
               'Belum ada transaksi.',
-              style: TextStyle(color: Color(0xFF8B8A88)),
+              style: TextStyle(color: Color(0xFF64748B)),
             ),
           )
         else
@@ -750,9 +778,16 @@ class _HomeScreenState extends State<HomeScreen> {
               return Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C24),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+                  border: Border.all(color: Colors.black.withOpacity(0.04)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.01),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    )
+                  ],
                 ),
                 child: Row(
                   children: [
@@ -760,12 +795,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: (tx.isExpense ? const Color(0xFFD85A30) : const Color(0xFF1D9E75)).withValues(alpha: 0.12),
+                        color: (tx.isExpense ? const Color(0xFFEF4444) : const Color(0xFF10B981)).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
                         tx.isExpense ? Icons.arrow_downward : Icons.arrow_upward,
-                        color: tx.isExpense ? const Color(0xFFD85A30) : const Color(0xFF1D9E75),
+                        color: tx.isExpense ? const Color(0xFFEF4444) : const Color(0xFF10B981),
                         size: 16,
                       ),
                     ),
@@ -777,7 +812,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             tx.title,
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: Color(0xFF0F172A),
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),
@@ -786,7 +821,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             '${tx.category} • ${tx.wallet}',
                             style: const TextStyle(
-                              color: Color(0xFF8B8A88),
+                              color: Color(0xFF64748B),
                               fontSize: 11,
                             ),
                           ),
@@ -796,7 +831,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       '${tx.isExpense ? "-" : "+"} Rp ${NumberFormat.format(tx.amount)}',
                       style: TextStyle(
-                        color: tx.isExpense ? Colors.white : const Color(0xFF1D9E75),
+                        color: tx.isExpense ? const Color(0xFF0F172A) : const Color(0xFF10B981),
                         fontWeight: FontWeight.w900,
                         fontSize: 13,
                       ),
@@ -814,12 +849,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C24),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF7F77DD).withValues(alpha: 0.15)),
+        border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.15)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF7F77DD).withValues(alpha: 0.05),
+            color: const Color(0xFF6366F1).withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -833,15 +868,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF7F77DD).withValues(alpha: 0.12),
+                  color: const Color(0xFF6366F1).withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.auto_awesome, color: Color(0xFF7F77DD), size: 16),
+                child: const Icon(Icons.auto_awesome, color: Color(0xFF6366F1), size: 16),
               ),
               const SizedBox(width: 10),
               const Text(
                 'Prediksi Saldo Akhir Bulan',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ],
           ),
@@ -852,23 +887,23 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Estimasi Saldo Sisa', style: TextStyle(color: Color(0xFF8B8A88), fontSize: 11)),
+                  const Text('Estimasi Saldo Sisa', style: TextStyle(color: Color(0xFF64748B), fontSize: 11)),
                   const SizedBox(height: 4),
                   Text(
                     'Rp ${NumberFormat.format(widget.totalSaldo - 450000)}',
-                    style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900),
+                    style: const TextStyle(color: Color(0xFF0F172A), fontSize: 20, fontWeight: FontWeight.w900),
                   ),
                 ],
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1D9E75).withValues(alpha: 0.12),
+                  color: const Color(0xFFD1FAE5),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
                   '💡 Pace Aman',
-                  style: TextStyle(color: Color(0xFF1D9E75), fontSize: 10, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Color(0xFF065F46), fontSize: 10, fontWeight: FontWeight.bold),
                 ),
               )
             ],
@@ -876,7 +911,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10),
           const Text(
             'Cuanly: Laju belanjamu stabil. Sisa Rp 1.500.000 dari limit anggaran bulananmu.',
-            style: TextStyle(color: Color(0xFF8B8A88), fontSize: 11, height: 1.3),
+            style: TextStyle(color: Color(0xFF64748B), fontSize: 11, height: 1.3),
           )
         ],
       ),
@@ -889,12 +924,12 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const Text(
           'Target Menabung (Goals)',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 12),
-        _buildGoalItem('💻 Beli Laptop Baru', 4500000, 7500000, const Color(0xFF7F77DD)),
+        _buildGoalItem('💻 Beli Laptop Baru', 4500000, 7500000, const Color(0xFF6366F1)),
         const SizedBox(height: 12),
-        _buildGoalItem('🛡️ Dana Darurat 2026', 1500000, 3000000, const Color(0xFF1D9E75)),
+        _buildGoalItem('🛡️ Dana Darurat 2026', 1500000, 3000000, const Color(0xFF059669)),
       ],
     );
   }
@@ -904,9 +939,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C24),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+        border: Border.all(color: Colors.black.withOpacity(0.04)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.015),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -914,10 +956,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+              Text(title, style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 13)),
               Text(
                 'Rp ${NumberFormat.format(current)} / Rp ${NumberFormat.format(target)}',
-                style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11),
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
               )
             ],
           ),
@@ -927,7 +969,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 height: 6,
                 width: double.infinity,
-                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.04), borderRadius: BorderRadius.circular(3)),
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.04), borderRadius: BorderRadius.circular(3)),
               ),
               FractionallySizedBox(
                 widthFactor: pct,
@@ -941,7 +983,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 8),
           Text(
             'Tercapai ${(pct * 100).toStringAsFixed(0)}% — Nabung Rp 500.000 lagi bulan ini untuk tetap on-track.',
-            style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 10),
+            style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
           )
         ],
       ),
@@ -954,15 +996,22 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const Text(
           'Deteksi Langganan Otomatis',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C24),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+            border: Border.all(color: Colors.black.withOpacity(0.04)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.015),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              )
+            ],
           ),
           child: Column(
             children: [
@@ -970,15 +1019,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 name: 'Spotify Premium',
                 price: 'Rp 54.990/bln',
                 status: 'Sering digunakan',
-                color: const Color(0xFF1D9E75),
+                color: const Color(0xFF059669),
                 isWarning: false,
               ),
-              const Divider(color: Colors.white10, height: 24),
+              const Divider(color: Colors.black12, height: 24),
               _buildSubscriptionItem(
                 name: 'Netflix Premium',
                 price: 'Rp 186.000/bln',
                 status: 'Jarang digunakan',
-                color: const Color(0xFFE24B4A),
+                color: const Color(0xFFEF4444),
                 isWarning: true,
               ),
             ],
@@ -1001,9 +1050,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+            Text(name, style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 13)),
             const SizedBox(height: 4),
-            Text(price, style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11)),
+            Text(price, style: const TextStyle(color: Color(0xFF64748B), fontSize: 11)),
           ],
         ),
         Column(
@@ -1012,7 +1061,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
+                color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -1024,7 +1073,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 4),
               const Text(
                 '💡 Hemat: Downgrade aja!',
-                style: TextStyle(color: Color(0xFFEF9F27), fontSize: 9, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFFF59E0B), fontSize: 9, fontWeight: FontWeight.bold),
               )
             ]
           ],
@@ -1036,7 +1085,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showNotificationsBottomSheet() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF1C1C24),
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -1051,16 +1100,16 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.notifications_active, color: Color(0xFF7F77DD)),
+                    Icon(Icons.notifications_active, color: Color(0xFF6366F1)),
                     SizedBox(width: 8),
                     Text(
                       'Pemberitahuan Pintar',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white54, size: 20),
+                  icon: const Icon(Icons.close, color: Color(0xFF64748B), size: 20),
                   onPressed: () => Navigator.pop(context),
                 )
               ],
@@ -1068,19 +1117,19 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             _buildNotificationItem(
               icon: Icons.warning_amber_rounded,
-              color: const Color(0xFFEF9F27),
+              color: const Color(0xFFF59E0B),
               title: 'Limit Anggaran Makanan',
               desc: 'Anggaran Makanan sudah terpakai 85%! Pikir-pikir lagi sebelum ngopi santai ya.',
             ),
             _buildNotificationItem(
               icon: Icons.event_repeat,
-              color: const Color(0xFF1D9E75),
+              color: const Color(0xFF059669),
               title: 'Tagihan Spotify Premium',
               desc: 'Tagihan Spotify Rp 54.999 jatuh tempo besok. Saldo GoPay terdebit otomatis.',
             ),
             _buildNotificationItem(
               icon: Icons.insights,
-              color: const Color(0xFF7F77DD),
+              color: const Color(0xFF6366F1),
               title: 'Rangkuman Mingguan',
               desc: 'Hebat! Pengeluaran mingguanmu turun 12% dibanding minggu lalu. Teruskan hematnya!',
             ),
@@ -1100,9 +1149,9 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
+        color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+        border: Border.all(color: Colors.black.withOpacity(0.03)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1110,7 +1159,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
+              color: color.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 18),
@@ -1122,12 +1171,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 12),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   desc,
-                  style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11, height: 1.3),
+                  style: const TextStyle(color: Color(0xFF475569), fontSize: 11, height: 1.3),
                 ),
               ],
             ),

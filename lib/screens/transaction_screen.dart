@@ -105,11 +105,11 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
   Color _getPrimaryColor() {
     switch (widget.currentAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669);
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8);
       default:
-        return const Color(0xFFCCA352);
+        return const Color(0xFFD97706);
     }
   }
 
@@ -134,7 +134,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
         SnackBar(
           content: const Text(
             'Voice Input Terdeteksi: "Membeli Kopi Starbucks Caramel senilai 55 ribu rupiah"',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           backgroundColor: _getPrimaryColor(),
         ),
@@ -156,19 +156,28 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
     final primaryColor = _getPrimaryColor();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C1C24),
-        title: const Text('Transaksi & Sosial', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: primaryColor,
-          labelColor: primaryColor,
-          unselectedLabelColor: const Color(0xFF8B8A88),
-          tabs: const [
-            Tab(text: 'Catat Transaksi'),
-            Tab(text: 'Sosial (Split Bill)'),
-          ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text('Transaksi & Sosial', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16)),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.05))),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              indicatorColor: primaryColor,
+              labelColor: primaryColor,
+              unselectedLabelColor: const Color(0xFF64748B),
+              tabs: const [
+                Tab(text: 'Catat Transaksi'),
+                Tab(text: 'Sosial (Split Bill)'),
+              ],
+            ),
+          ),
         ),
       ),
       body: TabBarView(
@@ -192,9 +201,16 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C24),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+            border: Border.all(color: Colors.black.withOpacity(0.05)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.015),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              )
+            ],
           ),
           child: Form(
             key: _formKey,
@@ -203,7 +219,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
               children: [
                 const Text(
                   'Catat Transaksi Baru',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
                 
@@ -213,18 +229,18 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                     Expanded(
                       child: TextFormField(
                         controller: _titleController,
-                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                         decoration: InputDecoration(
                           labelText: 'Nama Transaksi',
-                          labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                          labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                           hintText: 'e.g. Starbucks, Gaji, Grab',
-                          hintStyle: const TextStyle(color: Colors.white24, fontSize: 12),
+                          hintStyle: const TextStyle(color: Colors.black26, fontSize: 12),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white12),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
+                            borderSide: BorderSide(color: primaryColor, width: 1.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
@@ -239,13 +255,13 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                         duration: const Duration(milliseconds: 300),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: _isListening ? const Color(0xFFD85A30) : const Color(0xFF534AB7).withValues(alpha: 0.12),
+                          color: _isListening ? const Color(0xFFD85A30) : const Color(0xFF6366F1).withOpacity(0.1),
                           shape: BoxShape.circle,
-                          border: Border.all(color: _isListening ? const Color(0xFFD85A30) : const Color(0xFF534AB7).withValues(alpha: 0.3)),
+                          border: Border.all(color: _isListening ? const Color(0xFFD85A30) : const Color(0xFF6366F1).withOpacity(0.2)),
                         ),
                         child: Icon(
                           _isListening ? Icons.graphic_eq : Icons.mic,
-                          color: _isListening ? Colors.white : const Color(0xFF7F77DD),
+                          color: _isListening ? Colors.white : const Color(0xFF6366F1),
                           size: 20,
                         ),
                       ),
@@ -261,17 +277,17 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                 // Amount
                 TextFormField(
                   controller: _amountController,
-                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                  style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Jumlah Uang (Rupiah)',
-                    labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                    labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white12),
+                      borderSide: const BorderSide(color: Colors.black12),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
@@ -289,13 +305,13 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         initialValue: _category,
-                        dropdownColor: const Color(0xFF1C1C24),
-                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                         decoration: InputDecoration(
                           labelText: 'Kategori',
-                          labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                          labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white12),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
@@ -317,13 +333,13 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         initialValue: _wallet,
-                        dropdownColor: const Color(0xFF1C1C24),
-                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                         decoration: InputDecoration(
                           labelText: 'Dompet/Sumber',
-                          labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                          labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white12),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
@@ -350,11 +366,11 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.savings, color: Color(0xFF1D9E75), size: 18),
+                          Icon(Icons.savings, color: Color(0xFF059669), size: 18),
                           SizedBox(width: 8),
                           Text(
                             'Aktifkan Round-up Saving',
-                            style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Color(0xFF334155), fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -365,7 +381,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                             _useRoundUp = val;
                           });
                         },
-                        activeThumbColor: const Color(0xFF1D9E75),
+                        activeColor: const Color(0xFF059669),
                       ),
                     ],
                   ),
@@ -373,7 +389,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                     const SizedBox(height: 4),
                     const Text(
                       '*Transaksi akan dibulatkan ke kelipatan Rp 10.000 terdekat. Selisih pembulatan otomatis ditabung.',
-                      style: TextStyle(color: Color(0xFF1D9E75), fontSize: 10, fontStyle: FontStyle.italic),
+                      style: TextStyle(color: Color(0xFF059669), fontSize: 10, fontStyle: FontStyle.italic),
                     ),
                   ],
                   const SizedBox(height: 14),
@@ -386,6 +402,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     onPressed: () {
@@ -405,7 +422,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Round-up Sukses! Rp ${NumberFormat.format(diff)} berhasil dimasukkan ke tabungan Anda.'),
-                                backgroundColor: const Color(0xFF1D9E75),
+                                backgroundColor: const Color(0xFF059669),
                               ),
                             );
                           }
@@ -422,7 +439,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                     },
                     child: const Text(
                       'Simpan Transaksi',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ),
                 ),
@@ -433,7 +450,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
 
         // Simple Transaction list below
         const SizedBox(height: 24),
-        const Text('Daftar Transaksi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+        const Text('Daftar Transaksi', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
         const SizedBox(height: 12),
         _buildTransactionList(),
       ],
@@ -442,7 +459,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
 
   Widget _buildTransactionList() {
     if (widget.transactions.isEmpty) {
-      return const Center(child: Padding(padding: EdgeInsets.all(24), child: Text('Belum ada transaksi.', style: TextStyle(color: Color(0xFF8B8A88)))));
+      return const Center(child: Padding(padding: EdgeInsets.all(24), child: Text('Belum ada transaksi.', style: TextStyle(color: Color(0xFF64748B)))));
     }
 
     return ListView.separated(
@@ -455,9 +472,16 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C24),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+            border: Border.all(color: Colors.black.withOpacity(0.04)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.01),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              )
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -467,12 +491,12 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: (tx.isExpense ? const Color(0xFFD85A30) : const Color(0xFF1D9E75)).withValues(alpha: 0.12),
+                      color: (tx.isExpense ? const Color(0xFFEF4444) : const Color(0xFF10B981)).withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       tx.isExpense ? Icons.arrow_downward : Icons.arrow_upward,
-                      color: tx.isExpense ? const Color(0xFFD85A30) : const Color(0xFF1D9E75),
+                      color: tx.isExpense ? const Color(0xFFEF4444) : const Color(0xFF10B981),
                       size: 14,
                     ),
                   ),
@@ -480,9 +504,9 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(tx.title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                      Text(tx.title, style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 12)),
                       const SizedBox(height: 4),
-                      Text('${tx.category} • ${tx.wallet}', style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 10)),
+                      Text('${tx.category} • ${tx.wallet}', style: const TextStyle(color: Color(0xFF64748B), fontSize: 10)),
                     ],
                   ),
                 ],
@@ -490,7 +514,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
               Text(
                 '${tx.isExpense ? "-" : "+"} Rp ${NumberFormat.format(tx.amount)}',
                 style: TextStyle(
-                  color: tx.isExpense ? Colors.white : const Color(0xFF1D9E75),
+                  color: tx.isExpense ? const Color(0xFF0F172A) : const Color(0xFF10B981),
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -510,34 +534,41 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C24),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+            border: Border.all(color: Colors.black.withOpacity(0.05)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.015),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              )
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Row(
                 children: [
-                  Icon(Icons.groups, color: Color(0xFF7F77DD), size: 20),
+                  Icon(Icons.groups, color: Color(0xFF6366F1), size: 20),
                   SizedBox(width: 8),
-                  Text('Kalkulator Patungan (Split Bill)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text('Kalkulator Patungan (Split Bill)', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
                 ],
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _splitBillController,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white, fontSize: 13),
+                style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                 decoration: InputDecoration(
                   labelText: 'Total Tagihan Gabungan (Rupiah)',
-                  labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                  labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white12),
+                    borderSide: const BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: primaryColor),
+                    borderSide: BorderSide(color: primaryColor, width: 1.5),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -549,11 +580,11 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Jumlah Anggota Kelompok', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                  const Text('Jumlah Anggota Kelompok', style: TextStyle(color: Color(0xFF334155), fontSize: 12)),
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.remove_circle_outline, color: Color(0xFF8B8A88)),
+                        icon: const Icon(Icons.remove_circle_outline, color: Color(0xFF64748B)),
                         onPressed: _peopleCount > 1
                             ? () {
                                 setState(() {
@@ -563,9 +594,9 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                               }
                             : null,
                       ),
-                      Text('$_peopleCount', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                      Text('$_peopleCount', style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14)),
                       IconButton(
-                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFF8B8A88)),
+                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFF64748B)),
                         onPressed: () {
                           setState(() {
                             _peopleCount++;
@@ -584,13 +615,13 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: primaryColor.withValues(alpha: 0.08),
+                    color: primaryColor.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: primaryColor.withValues(alpha: 0.2)),
+                    border: Border.all(color: primaryColor.withOpacity(0.2)),
                   ),
                   child: Column(
                     children: [
-                      const Text('Setiap orang membayar:', style: TextStyle(color: Colors.white70, fontSize: 11)),
+                      const Text('Setiap orang membayar:', style: TextStyle(color: Color(0xFF475569), fontSize: 11)),
                       const SizedBox(height: 6),
                       Text(
                         'Rp ${NumberFormat.format(_splitResult)}',
@@ -600,7 +631,7 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                       // Friends brief
                       Text(
                         'Anggota kelompok: Anda, ${_friends.take(_peopleCount - 1).join(", ")}',
-                        style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 10),
+                        style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
                       ),
                     ],
                   ),
@@ -611,7 +642,8 @@ class _TransactionScreenState extends State<TransactionScreen> with SingleTicker
                   height: 44,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF7F77DD),
+                      backgroundColor: const Color(0xFF6366F1),
+                      elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     onPressed: () {

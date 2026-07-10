@@ -158,10 +158,10 @@ export function B2BFinance() {
 
   // Department aggregate data
   const deptData = [
-    { name: 'Engineering', Pengeluaran: 48000000, color: '#534AB7' },
-    { name: 'Sales', Pengeluaran: 32000000, color: '#7F77DD' },
-    { name: 'Marketing', Pengeluaran: 55000000, color: '#D85A30' },
-    { name: 'HR', Pengeluaran: 12000000, color: '#EF9F27' },
+    { name: 'Engineering', Pengeluaran: 48000000, color: '#4f46e5' },
+    { name: 'Sales', Pengeluaran: 32000000, color: '#818cf8' },
+    { name: 'Marketing', Pengeluaran: 55000000, color: '#ea580c' },
+    { name: 'HR', Pengeluaran: 12000000, color: '#f59e0b' },
   ];
 
   // Leaderboard B2B saving challenge (Score = budget left percentage)
@@ -173,7 +173,7 @@ export function B2BFinance() {
   ];
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-white">
+    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-cuanly-textDark">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -183,14 +183,14 @@ export function B2BFinance() {
         <div className="flex space-x-3">
           <button 
             onClick={() => setExportMode('pdf')}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-cuanly-violet/10 text-cuanly-violetLight border border-cuanly-violet/20 hover:bg-cuanly-violet/20 transition-all duration-200"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-cuanly-violet border border-slate-200 hover:bg-slate-50 transition-all duration-200"
           >
             <FileText size={14} />
             <span>Preview Laporan PDF</span>
           </button>
           <button 
             onClick={() => setExportMode('excel')}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-cuanly-mint/10 text-cuanly-mint border border-cuanly-mint/20 hover:bg-cuanly-mint/20 transition-all duration-200"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-cuanly-mint border border-slate-200 hover:bg-slate-50 transition-all duration-200"
           >
             <Download size={14} />
             <span>Preview Excel</span>
@@ -201,19 +201,19 @@ export function B2BFinance() {
       {/* Export Report Preview Drawer / Overlay */}
       {exportMode && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-cuanly-card border border-cuanly-border rounded-2xl max-w-2xl w-full p-6 relative animate-scaleUp">
+          <div className="bg-cuanly-card border border-cuanly-border rounded-2xl max-w-2xl w-full p-6 shadow-xl shadow-slate-200 relative overflow-hidden animate-scaleUp">
             <button 
               onClick={() => setExportMode(null)}
-              className="absolute top-4 right-4 text-cuanly-textMuted hover:text-white"
+              className="absolute top-4 right-4 text-cuanly-textMuted hover:text-cuanly-textDark"
             >
               <X size={20} />
             </button>
             <div className="flex items-center space-x-3 mb-6">
-              <div className="p-3 rounded-xl bg-cuanly-violet/10 text-cuanly-violetLight">
+              <div className="p-3 rounded-xl bg-cuanly-violet/10 text-cuanly-violet">
                 <FileCheck size={24} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Pratinjau Ekspor Laporan ({exportMode.toUpperCase()})</h3>
+                <h3 className="text-base font-bold text-cuanly-textDark">Pratinjau Ekspor Laporan ({exportMode.toUpperCase()})</h3>
                 <p className="text-xs text-cuanly-textMuted">Laporan Konsolidasi Finansial - Q2 2026</p>
               </div>
             </div>
@@ -270,7 +270,7 @@ export function B2BFinance() {
             <div className="flex justify-end space-x-3">
               <button 
                 onClick={() => setExportMode(null)}
-                className="px-4 py-2.5 rounded-xl text-xs font-bold border border-cuanly-border hover:bg-white/5"
+                className="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 hover:bg-slate-50 text-cuanly-textDark"
               >
                 Batal
               </button>
@@ -288,16 +288,16 @@ export function B2BFinance() {
       {/* Main Grid: Aggregate view + Team Saving Leaderboard */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Aggregate view per department */}
-        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
-          <h3 className="text-base font-bold mb-1">Pengeluaran Agregat per Departemen</h3>
+        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
+          <h3 className="text-base font-bold text-cuanly-textDark mb-1">Pengeluaran Agregat per Departemen</h3>
           <p className="text-xs text-cuanly-textMuted mb-6">Total alokasi dana operasional kuartal ini</p>
 
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={deptData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="#8B8A88" fontSize={11} tickLine={false} />
-                <YAxis stroke="#8B8A88" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${v/1000000}M`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} />
+                <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${v/1000000}M`} />
                 <Tooltip formatter={(v) => formatIDR(v)} />
                 <Bar dataKey="Pengeluaran" radius={[4, 4, 0, 0]}>
                   {deptData.map((entry, index) => (
@@ -310,11 +310,11 @@ export function B2BFinance() {
         </div>
 
         {/* Team saving challenge leaderboard */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 flex flex-col justify-between">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 flex flex-col justify-between shadow-sm shadow-slate-100">
           <div>
             <div className="flex items-center space-x-2 text-cuanly-yellow mb-2">
               <Award size={20} />
-              <h3 className="text-base font-bold text-white">Saving Leaderboard</h3>
+              <h3 className="text-base font-bold text-cuanly-textDark">Saving Leaderboard</h3>
             </div>
             <p className="text-xs text-cuanly-textMuted mb-6">Kompetisi efisiensi anggaran antar departemen</p>
 
@@ -322,11 +322,11 @@ export function B2BFinance() {
               {leaderboard.map((team, idx) => (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between items-center text-xs">
-                    <div className="flex items-center space-x-2 font-bold">
+                    <div className="flex items-center space-x-2 font-bold text-cuanly-textDark">
                       <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
                         team.rank === 1 ? 'bg-amber-500 text-black' :
                         team.rank === 2 ? 'bg-slate-400 text-black' :
-                        team.rank === 3 ? 'bg-amber-700 text-white' : 'bg-white/10 text-white'
+                        team.rank === 3 ? 'bg-amber-700 text-white' : 'bg-slate-200 text-cuanly-textDark'
                       }`}>
                         {team.rank}
                       </span>
@@ -335,7 +335,7 @@ export function B2BFinance() {
                     <span className="font-bold text-cuanly-mint">{team.score} Left</span>
                   </div>
                   {/* Progress Line */}
-                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div 
                       className={`h-full rounded-full ${
                         team.progress > 85 ? 'bg-cuanly-mint' :
@@ -349,7 +349,7 @@ export function B2BFinance() {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-cuanly-border flex justify-between items-center text-xs">
+          <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-xs">
             <span className="text-cuanly-textMuted">Efisiensi Grup:</span>
             <span className="font-black text-cuanly-mint">+Rp 50.500.000 (Sangat Bagus)</span>
           </div>
@@ -359,10 +359,10 @@ export function B2BFinance() {
       {/* Approval Flow Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Claims List Table */}
-        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-base font-bold">Persetujuan Klaim Reimbursement</h3>
+              <h3 className="text-base font-bold text-cuanly-textDark">Persetujuan Klaim Reimbursement</h3>
               <p className="text-xs text-cuanly-textMuted mt-0.5">Alur approval klaim pengeluaran karyawan</p>
             </div>
             <div className="flex items-center space-x-1.5 text-xs text-cuanly-textMuted">
@@ -375,7 +375,7 @@ export function B2BFinance() {
             {claims.map((claim) => (
               <div 
                 key={claim.id} 
-                className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:border-cuanly-border transition-all duration-200 cursor-pointer"
+                className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all duration-200 cursor-pointer"
                 onClick={() => setActivePreviewClaim(claim)}
               >
                 <div className="flex items-center space-x-4">
@@ -387,13 +387,13 @@ export function B2BFinance() {
                      claim.status === 'rejected' ? <X size={16} /> : 'claim'}
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">{claim.title}</h4>
+                    <h4 className="text-xs font-bold text-cuanly-textDark">{claim.title}</h4>
                     <p className="text-[10px] text-cuanly-textMuted">{claim.name} ({claim.department}) • {claim.date}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-3" onClick={(e) => e.stopPropagation()}>
-                  <span className="text-xs font-black mr-2">{formatIDR(claim.amount)}</span>
+                  <span className="text-xs font-black mr-2 text-cuanly-textDark">{formatIDR(claim.amount)}</span>
                   {claim.status === 'pending' ? (
                     <div className="flex space-x-2">
                       <button 
@@ -425,12 +425,12 @@ export function B2BFinance() {
 
         <div className="space-y-6">
           {/* Claim Detail Preview Panel */}
-          <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 flex flex-col justify-between min-h-[300px]">
+          <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 flex flex-col justify-between min-h-[300px] shadow-sm shadow-slate-100">
             {activePreviewClaim ? (
               <>
                 <div>
                   <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-base font-bold">Rincian Pengajuan</h3>
+                    <h3 className="text-base font-bold text-cuanly-textDark">Rincian Pengajuan</h3>
                     <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider ${
                       activePreviewClaim.status === 'approved' ? 'bg-cuanly-green/10 text-cuanly-green' :
                       activePreviewClaim.status === 'rejected' ? 'bg-cuanly-red/10 text-cuanly-red' : 'bg-cuanly-yellow/10 text-cuanly-yellow'
@@ -442,15 +442,15 @@ export function B2BFinance() {
                   <div className="space-y-4 text-xs">
                     <div>
                       <label className="text-[10px] text-cuanly-textMuted uppercase tracking-wider block">Karyawan</label>
-                      <span className="font-bold text-white block mt-0.5">{activePreviewClaim.name} ({activePreviewClaim.department})</span>
+                      <span className="font-bold text-cuanly-textDark block mt-0.5">{activePreviewClaim.name} ({activePreviewClaim.department})</span>
                     </div>
                     <div>
                       <label className="text-[10px] text-cuanly-textMuted uppercase tracking-wider block">Klaim Pengeluaran</label>
-                      <span className="font-bold text-white block mt-0.5">{activePreviewClaim.title}</span>
+                      <span className="font-bold text-cuanly-textDark block mt-0.5">{activePreviewClaim.title}</span>
                     </div>
                     <div>
                       <label className="text-[10px] text-cuanly-textMuted uppercase tracking-wider block">Total Pengajuan</label>
-                      <span className="text-sm font-black text-cuanly-violetLight block mt-0.5">{formatIDR(activePreviewClaim.amount)}</span>
+                      <span className="text-sm font-black text-cuanly-violet block mt-0.5">{formatIDR(activePreviewClaim.amount)}</span>
                     </div>
                     <div>
                       <label className="text-[10px] text-cuanly-textMuted uppercase tracking-wider block">Keterangan / Alasan</label>
@@ -460,7 +460,7 @@ export function B2BFinance() {
                 </div>
 
                 {activePreviewClaim.status === 'pending' && (
-                  <div className="flex space-x-3 mt-6 pt-4 border-t border-cuanly-border">
+                  <div className="flex space-x-3 mt-6 pt-4 border-t border-slate-100">
                     <button 
                       onClick={() => handleReject(activePreviewClaim.id)}
                       className="flex-1 py-2 rounded-xl text-xs font-bold border border-cuanly-red/30 text-cuanly-red hover:bg-cuanly-red/10 transition-colors"
@@ -478,16 +478,16 @@ export function B2BFinance() {
               </>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-cuanly-textMuted">
-                <Eye size={36} className="mb-3 text-cuanly-border" />
+                <Eye size={36} className="mb-3 text-slate-300" />
                 <p className="text-xs">Klik salah satu klaim reimbursement untuk melihat rincian pengajuan dan menyetujui/menolak.</p>
               </div>
             )}
           </div>
 
           {/* Form Pengajuan Klaim Baru */}
-          <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
-            <h3 className="text-base font-bold mb-4 flex items-center space-x-2">
-              <span className="text-cuanly-violetLight">📝</span>
+          <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
+            <h3 className="text-base font-bold mb-4 flex items-center space-x-2 text-cuanly-textDark">
+              <span className="text-cuanly-violet">📝</span>
               <span>Ajukan Reimbursement Baru</span>
             </h3>
             <form onSubmit={handleAddClaim} className="space-y-3 text-xs">
@@ -498,7 +498,7 @@ export function B2BFinance() {
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Andi Saputra"
-                  className="w-full bg-white/5 border border-cuanly-border rounded-xl px-3 py-2 text-white focus:border-cuanly-violet focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-cuanly-textDark focus:border-cuanly-violet focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -507,7 +507,7 @@ export function B2BFinance() {
                   <select
                     value={newDept}
                     onChange={(e) => setNewDept(e.target.value)}
-                    className="w-full bg-cuanly-card border border-cuanly-border rounded-xl px-3 py-2 text-white focus:border-cuanly-violet focus:outline-none"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-cuanly-textDark focus:border-cuanly-violet focus:outline-none cursor-pointer"
                   >
                     <option value="Engineering">Engineering</option>
                     <option value="Sales">Sales</option>
@@ -521,7 +521,7 @@ export function B2BFinance() {
                     type="date"
                     value={newDate}
                     onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full bg-white/5 border border-cuanly-border rounded-xl px-3 py-2 text-white focus:border-cuanly-violet focus:outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-cuanly-textDark focus:border-cuanly-violet focus:outline-none cursor-pointer"
                   />
                 </div>
               </div>
@@ -533,7 +533,7 @@ export function B2BFinance() {
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
                     placeholder="AWS Cloud Hosting"
-                    className="w-full bg-white/5 border border-cuanly-border rounded-xl px-3 py-2 text-white focus:border-cuanly-violet focus:outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-cuanly-textDark focus:border-cuanly-violet focus:outline-none"
                   />
                 </div>
                 <div>
@@ -543,7 +543,7 @@ export function B2BFinance() {
                     value={newAmount}
                     onChange={(e) => setNewAmount(e.target.value)}
                     placeholder="150000"
-                    className="w-full bg-white/5 border border-cuanly-border rounded-xl px-3 py-2 text-white focus:border-cuanly-violet focus:outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-cuanly-textDark focus:border-cuanly-violet focus:outline-none"
                   />
                 </div>
               </div>
@@ -554,7 +554,7 @@ export function B2BFinance() {
                   onChange={(e) => setNewDesc(e.target.value)}
                   placeholder="Keterangan keperluan dinas..."
                   rows={2}
-                  className="w-full bg-white/5 border border-cuanly-border rounded-xl px-3 py-2 text-white focus:border-cuanly-violet focus:outline-none resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-cuanly-textDark focus:border-cuanly-violet focus:outline-none resize-none"
                 />
               </div>
               <button

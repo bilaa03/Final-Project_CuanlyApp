@@ -8,17 +8,18 @@ export default {
     extend: {
       colors: {
         cuanly: {
-          bg: '#0F0F14',
-          card: '#1C1C24',
-          violet: '#534AB7',
-          violetLight: '#7F77DD',
-          mint: '#1D9E75',
-          coral: '#D85A30',
-          green: '#639922',
-          yellow: '#EF9F27',
-          red: '#E24B4A',
-          border: 'rgba(255, 255, 255, 0.06)',
-          textMuted: '#8B8A88',
+          bg: '#f8fafc',
+          card: '#ffffff',
+          violet: '#4f46e5',
+          violetLight: '#818cf8',
+          mint: '#059669',
+          coral: '#ea580c',
+          green: '#10b981',
+          yellow: '#f59e0b',
+          red: '#ef4444',
+          border: 'rgba(0, 0, 0, 0.05)',
+          textMuted: '#64748b',
+          textDark: '#0f172a',
         }
       },
       fontFamily: {

@@ -175,7 +175,7 @@ export function Overview({
   const status = getStatusLabel();
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-white">
+    <div className="flex-1 p-8 overflow-y-auto bg-cuanly-bg text-cuanly-textDark">
       {/* Welcome Banner */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -193,37 +193,37 @@ export function Overview({
           <div className="relative">
             <button 
               onClick={() => setShowNotifs(!showNotifs)}
-              className="p-2 rounded-xl border border-cuanly-border bg-white/5 hover:bg-white/10 text-cuanly-violetLight relative transition-colors cursor-pointer"
+              className="p-2 rounded-xl border border-cuanly-border bg-white hover:bg-slate-100 text-cuanly-violet relative transition-colors cursor-pointer"
             >
               <Bell size={16} />
               <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-cuanly-red rounded-full"></span>
             </button>
 
             {showNotifs && (
-              <div className="absolute right-0 mt-3 w-80 bg-cuanly-card border border-cuanly-border rounded-2xl p-4 shadow-2xl z-50 space-y-3">
+              <div className="absolute right-0 mt-3 w-80 bg-cuanly-card border border-cuanly-border rounded-2xl p-4 shadow-xl shadow-slate-200/80 z-50 space-y-3">
                 <div className="flex justify-between items-center border-b border-cuanly-border pb-2">
-                  <span className="text-xs font-black text-white">Notifikasi Pintar</span>
-                  <span className="text-[10px] text-cuanly-violetLight font-bold cursor-pointer hover:underline" onClick={() => setShowNotifs(false)}>Tutup</span>
+                  <span className="text-xs font-black text-cuanly-textDark">Notifikasi Pintar</span>
+                  <span className="text-[10px] text-cuanly-violet font-bold cursor-pointer hover:underline" onClick={() => setShowNotifs(false)}>Tutup</span>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-2 text-xs p-2 rounded-lg bg-white/5">
+                  <div className="flex items-start space-x-2 text-xs p-2 rounded-lg bg-slate-50">
                     <span className="text-cuanly-yellow mt-0.5">⚠️</span>
                     <div>
-                      <p className="font-bold text-white">Batas Anggaran Makanan</p>
+                      <p className="font-bold text-cuanly-textDark">Batas Anggaran Makanan</p>
                       <p className="text-[10px] text-cuanly-textMuted mt-0.5">Anggaran Makan Siang sudah terpakai 85%. Pikir-pikir lagi sebelum jajan kopi ya!</p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-2 text-xs p-2 rounded-lg bg-white/5">
+                  <div className="flex items-start space-x-2 text-xs p-2 rounded-lg bg-slate-50">
                     <span className="text-cuanly-mint mt-0.5">📅</span>
                     <div>
-                      <p className="font-bold text-white">Tagihan Spotify Premium</p>
+                      <p className="font-bold text-cuanly-textDark">Tagihan Spotify Premium</p>
                       <p className="text-[10px] text-cuanly-textMuted mt-0.5">Tagihan Spotify Rp 54.990 jatuh tempo besok (5 Juni). Saldo terpotong otomatis.</p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-2 text-xs p-2 rounded-lg bg-white/5">
-                    <span className="text-cuanly-violetLight mt-0.5">📊</span>
+                  <div className="flex items-start space-x-2 text-xs p-2 rounded-lg bg-slate-50">
+                    <span className="text-cuanly-violet mt-0.5">📊</span>
                     <div>
-                      <p className="font-bold text-white">Rangkuman Mingguan</p>
+                      <p className="font-bold text-cuanly-textDark">Rangkuman Mingguan</p>
                       <p className="text-[10px] text-cuanly-textMuted mt-0.5">Hebat! Pengeluaran mingguan Anda turun 12% dibanding minggu lalu.</p>
                     </div>
                   </div>
@@ -236,14 +236,14 @@ export function Overview({
           <div className="relative">
             <button 
               onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-              className="px-4 py-2 rounded-xl text-xs font-bold border border-cuanly-border bg-white/5 hover:bg-white/10 flex items-center space-x-2 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 flex items-center space-x-2 text-cuanly-textDark transition-colors cursor-pointer"
             >
-              <Calendar size={14} className="text-cuanly-violetLight" />
+              <Calendar size={14} className="text-cuanly-violet" />
               <span>{selectedMonth}</span>
             </button>
 
             {showMonthDropdown && (
-              <div className="absolute right-0 mt-2 w-40 bg-cuanly-card border border-cuanly-border rounded-xl shadow-2xl z-50 overflow-hidden">
+              <div className="absolute right-0 mt-2 w-40 bg-cuanly-card border border-cuanly-border rounded-xl shadow-lg shadow-slate-200/80 z-50 overflow-hidden">
                 {[prevMonthName, currentMonthName, nextMonthName].map((m) => (
                   <button
                     key={m}
@@ -251,8 +251,8 @@ export function Overview({
                       setSelectedMonth(m);
                       setShowMonthDropdown(false);
                     }}
-                    className={`w-full text-left px-4 py-2.5 text-xs hover:bg-white/5 transition-colors block ${
-                      selectedMonth === m ? 'text-cuanly-violetLight font-bold bg-white/5' : 'text-white'
+                    className={`w-full text-left px-4 py-2.5 text-xs hover:bg-slate-50 transition-colors block ${
+                      selectedMonth === m ? 'text-cuanly-violet font-bold bg-slate-50' : 'text-cuanly-textDark'
                     }`}
                   >
                     {m} {m === currentMonthName ? '(Bulan Ini)' : ''}
@@ -267,10 +267,10 @@ export function Overview({
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Total Saldo */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-violet/40 group relative overflow-hidden">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-violet/20 hover:shadow-md hover:shadow-slate-100 group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-cuanly-violet/5 rounded-full blur-2xl group-hover:bg-cuanly-violet/10 transition-all duration-300"></div>
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 rounded-xl bg-cuanly-violet/10 text-cuanly-violetLight">
+            <div className="p-3 rounded-xl bg-cuanly-violet/10 text-cuanly-violet">
               <Wallet size={20} />
             </div>
             <span className="text-[10px] font-bold text-cuanly-mint flex items-center space-x-1">
@@ -279,11 +279,11 @@ export function Overview({
             </span>
           </div>
           <p className="text-xs text-cuanly-textMuted font-medium uppercase tracking-wider">Total Saldo</p>
-          <h3 className="text-xl font-black mt-2 tracking-tight group-hover:text-cuanly-violetLight transition-colors duration-200">{formatIDR(displayedSaldo)}</h3>
+          <h3 className="text-xl font-black mt-2 tracking-tight text-cuanly-textDark group-hover:text-cuanly-violet transition-colors duration-200">{formatIDR(displayedSaldo)}</h3>
         </div>
 
         {/* Pemasukan */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-mint/40 group relative overflow-hidden">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-mint/20 hover:shadow-md hover:shadow-slate-100 group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-cuanly-mint/5 rounded-full blur-2xl group-hover:bg-cuanly-mint/10 transition-all duration-300"></div>
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 rounded-xl bg-cuanly-mint/10 text-cuanly-mint">
@@ -294,11 +294,11 @@ export function Overview({
             </span>
           </div>
           <p className="text-xs text-cuanly-textMuted font-medium uppercase tracking-wider">Pemasukan</p>
-          <h3 className="text-xl font-black mt-2 tracking-tight">{formatIDR(displayedPemasukan)}</h3>
+          <h3 className="text-xl font-black mt-2 tracking-tight text-cuanly-textDark">{formatIDR(displayedPemasukan)}</h3>
         </div>
 
         {/* Pengeluaran */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-coral/40 group relative overflow-hidden">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-coral/20 hover:shadow-md hover:shadow-slate-100 group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-cuanly-coral/5 rounded-full blur-2xl group-hover:bg-cuanly-coral/10 transition-all duration-300"></div>
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 rounded-xl bg-cuanly-coral/10 text-cuanly-coral">
@@ -309,14 +309,14 @@ export function Overview({
             </span>
           </div>
           <p className="text-xs text-cuanly-textMuted font-medium uppercase tracking-wider">Pengeluaran</p>
-          <h3 className="text-xl font-black mt-2 tracking-tight">{formatIDR(displayedPengeluaran)}</h3>
+          <h3 className="text-xl font-black mt-2 tracking-tight text-cuanly-textDark">{formatIDR(displayedPengeluaran)}</h3>
         </div>
  
         {/* Sisa Anggaran */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-violet/40 group relative overflow-hidden">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cuanly-violet/20 hover:shadow-md hover:shadow-slate-100 group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-cuanly-violet/5 rounded-full blur-2xl group-hover:bg-cuanly-violet/10 transition-all duration-300"></div>
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 rounded-xl bg-cuanly-violet/10 text-cuanly-violetLight">
+            <div className="p-3 rounded-xl bg-cuanly-violet/10 text-cuanly-violet">
               <PieChart size={20} />
             </div>
             <span className="text-[10px] font-bold text-cuanly-textMuted">
@@ -324,21 +324,21 @@ export function Overview({
             </span>
           </div>
           <p className="text-xs text-cuanly-textMuted font-medium uppercase tracking-wider">Sisa Anggaran</p>
-          <h3 className="text-xl font-black mt-2 tracking-tight">{formatIDR(Math.max(0, budgetLimit - displayedPengeluaran))}</h3>
+          <h3 className="text-xl font-black mt-2 tracking-tight text-cuanly-textDark">{formatIDR(Math.max(0, budgetLimit - displayedPengeluaran))}</h3>
         </div>
       </div>
 
       {/* Main Grid: Graph + AI Insight */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Interactive Trend Chart */}
-        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-base font-bold">Tren Aliran Dana</h3>
+              <h3 className="text-base font-bold text-cuanly-textDark">Tren Aliran Dana</h3>
               <p className="text-xs text-cuanly-textMuted mt-0.5">Perbandingan pemasukan vs pengeluaran terkini</p>
             </div>
             {/* Period Filters */}
-            <div className="bg-white/5 border border-cuanly-border p-1 rounded-xl flex space-x-1">
+            <div className="bg-slate-50 border border-slate-200 p-1 rounded-xl flex space-x-1">
               {['7 Hari Terakhir', '30 Hari Terakhir', 'Bulan Ini'].map((filter) => (
                 <button
                   key={filter}
@@ -346,7 +346,7 @@ export function Overview({
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                     timeFilter === filter 
                       ? 'bg-cuanly-violet text-white shadow' 
-                      : 'text-cuanly-textMuted hover:text-white'
+                      : 'text-cuanly-textMuted hover:text-cuanly-textDark'
                   }`}
                 >
                   {filter}
@@ -360,50 +360,50 @@ export function Overview({
               <AreaChart data={activeData}>
                 <defs>
                   <linearGradient id="colorPemasukan" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1D9E75" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#1D9E75" stopOpacity={0.0}/>
+                    <stop offset="5%" stopColor="#059669" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0}/>
                   </linearGradient>
                   <linearGradient id="colorPengeluaran" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#D85A30" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#D85A30" stopOpacity={0.0}/>
+                    <stop offset="5%" stopColor="#ea580c" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#ea580c" stopOpacity={0.0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="#8B8A88" fontSize={11} tickLine={false} />
-                <YAxis stroke="#8B8A88" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${v/1000}k`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} />
+                <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${v/1000}k`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#1C1C24', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                  labelStyle={{ fontWeight: 'bold', color: '#fff' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#f1f5f9', borderRadius: '12px', boxShadow: 'rgba(0,0,0,0.05) 0px 10px 15px -3px' }}
+                  labelStyle={{ fontWeight: 'bold', color: '#0f172a' }}
                   itemStyle={{ fontSize: '12px' }}
                 />
-                <Area type="monotone" dataKey="Pemasukan" stroke="#1D9E75" strokeWidth={2} fillOpacity={1} fill="url(#colorPemasukan)" />
-                <Area type="monotone" dataKey="Pengeluaran" stroke="#D85A30" strokeWidth={2} fillOpacity={1} fill="url(#colorPengeluaran)" />
+                <Area type="monotone" dataKey="Pemasukan" stroke="#059669" strokeWidth={2} fillOpacity={1} fill="url(#colorPemasukan)" />
+                <Area type="monotone" dataKey="Pengeluaran" stroke="#ea580c" strokeWidth={2} fillOpacity={1} fill="url(#colorPengeluaran)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* AI Insight of the Day */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden group shadow-sm shadow-slate-100">
           {/* Subtle glowing ring background */}
-          <div className="absolute -top-16 -right-16 w-36 h-36 bg-cuanly-violet/10 rounded-full blur-3xl group-hover:bg-cuanly-violet/20 transition-all duration-300"></div>
+          <div className="absolute -top-16 -right-16 w-36 h-36 bg-cuanly-violet/5 rounded-full blur-3xl group-hover:bg-cuanly-violet/10 transition-all duration-300"></div>
 
           <div>
-            <div className="flex items-center space-x-2 text-cuanly-violetLight mb-4">
+            <div className="flex items-center space-x-2 text-cuanly-violet mb-4">
               <Sparkles size={20} className="animate-pulse" />
-              <h3 className="text-base font-bold text-white">AI Insight of the Day</h3>
+              <h3 className="text-base font-bold text-cuanly-textDark">AI Insight of the Day</h3>
             </div>
             
-            <p className="text-sm text-gray-200 leading-relaxed">
-              "Kesehatan finansial Anda tergolong <strong className="text-cuanly-mint">{selectedMonth === 'Juli 2026' ? 'Belum Ada Transaksi' : 'Sangat Sehat'}</strong>. Rasio menabung Anda berada di angka <strong className="text-cuanly-violetLight">{displayedSavingRatio}%</strong>, melewati target standar 30%."
+            <p className="text-sm text-slate-700 leading-relaxed">
+              "Kesehatan finansial Anda tergolong <strong className="text-cuanly-mint">{selectedMonth === 'Juli 2026' ? 'Belum Ada Transaksi' : 'Sangat Sehat'}</strong>. Rasio menabung Anda berada di angka <strong className="text-cuanly-violet">{displayedSavingRatio}%</strong>, melewati target standar 30%."
             </p>
             
-            <div className="mt-4 p-4 bg-white/5 rounded-xl border border-white/5 text-xs text-cuanly-textMuted leading-relaxed space-y-3">
+            <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-cuanly-textMuted leading-relaxed space-y-3">
               <div>
                 💡 <strong>Rekomendasi Cerdas:</strong> {selectedMonth === 'Juli 2026' ? 'Belum ada data pengeluaran untuk dianalisis bulan ini.' : 'Belanja makanan Anda naik 14% dibanding minggu lalu. Disarankan untuk membatasi pengeluaran akhir pekan.'}
               </div>
-              <hr className="border-white/5" />
-              <div className="flex justify-between items-center text-white">
+              <hr className="border-slate-200" />
+              <div className="flex justify-between items-center text-cuanly-textDark">
                 <div>
                   <span className="text-[10px] text-cuanly-textMuted block uppercase font-bold tracking-wider">Prediksi Saldo Akhir Bulan</span>
                   <span className="font-black text-sm">{formatIDR(displayedSaldo - (selectedMonth === 'Juli 2026' ? 0 : 450000))}</span>
@@ -416,7 +416,7 @@ export function Overview({
           <div className="mt-6">
             <button 
               onClick={onOpenChat}
-              className="w-full flex items-center justify-center space-x-2 py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-cuanly-violet to-cuanly-violetLight text-white shadow-lg shadow-cuanly-violet/30 hover:opacity-90 transition-all duration-200"
+              className="w-full flex items-center justify-center space-x-2 py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-cuanly-violet to-cuanly-violetLight text-white shadow-lg shadow-cuanly-violet/20 hover:opacity-90 transition-all duration-200"
             >
               <span>Konsultasi Cuanly</span>
               <ArrowUpRight size={14} />
@@ -428,10 +428,10 @@ export function Overview({
       {/* Grid: Financial Goals & Auto Subscription Detector */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Financial Goals */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-base font-bold text-white flex items-center space-x-2">
-              <span className="text-cuanly-violetLight">🎯</span>
+            <h3 className="text-base font-bold text-cuanly-textDark flex items-center space-x-2">
+              <span className="text-cuanly-violet">🎯</span>
               <span>Target Menabung (Goals)</span>
             </h3>
             <span className="text-[10px] font-bold text-cuanly-textMuted">2 Target Aktif</span>
@@ -439,24 +439,24 @@ export function Overview({
 
           <div className="space-y-5">
             {/* Goal 1 */}
-            <div className="p-4 bg-white/5 border border-white/5 rounded-xl">
+            <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-bold text-white">💻 Beli Laptop Baru</span>
+                <span className="text-xs font-bold text-cuanly-textDark">💻 Beli Laptop Baru</span>
                 <span className="text-[10px] text-cuanly-textMuted">{formatIDR(4500000)} / {formatIDR(7500000)}</span>
               </div>
-              <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden mb-2">
+              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden mb-2">
                 <div className="h-full bg-cuanly-violet rounded-full" style={{ width: '60%' }}></div>
               </div>
               <p className="text-[10px] text-cuanly-textMuted font-bold">Tercapai 60% — Butuh Rp 500.000 lagi bulan ini untuk tetap sesuai jadwal target.</p>
             </div>
 
             {/* Goal 2 */}
-            <div className="p-4 bg-white/5 border border-white/5 rounded-xl">
+            <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-bold text-white">🛡️ Dana Darurat 2026</span>
+                <span className="text-xs font-bold text-cuanly-textDark">🛡️ Dana Darurat 2026</span>
                 <span className="text-[10px] text-cuanly-textMuted">{formatIDR(1500000)} / {formatIDR(3000000)}</span>
               </div>
-              <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden mb-2">
+              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden mb-2">
                 <div className="h-full bg-cuanly-mint rounded-full" style={{ width: '50%' }}></div>
               </div>
               <p className="text-[10px] text-cuanly-textMuted font-bold">Tercapai 50% — Dana tersimpan aman di dompet khusus cadangan.</p>
@@ -465,9 +465,9 @@ export function Overview({
         </div>
 
         {/* Subscription Auto Detector */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-base font-bold text-white flex items-center space-x-2">
+            <h3 className="text-base font-bold text-cuanly-textDark flex items-center space-x-2">
               <span className="text-cuanly-coral">💳</span>
               <span>Deteksi Langganan Otomatis</span>
             </h3>
@@ -475,17 +475,17 @@ export function Overview({
           </div>
 
           <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/5">
+            <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100">
               <div>
-                <h4 className="text-xs font-bold text-white">Spotify Premium</h4>
+                <h4 className="text-xs font-bold text-cuanly-textDark">Spotify Premium</h4>
                 <p className="text-[10px] text-cuanly-textMuted">Rp 54.990 / bulan • Terdebit otomatis</p>
               </div>
               <span className="px-2.5 py-1 rounded-lg bg-cuanly-mint/10 text-cuanly-mint text-[9px] font-bold">Sering digunakan (Aman)</span>
             </div>
 
-            <div className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/5 relative overflow-hidden group">
+            <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 relative overflow-hidden group">
               <div>
-                <h4 className="text-xs font-bold text-white">Netflix Premium</h4>
+                <h4 className="text-xs font-bold text-cuanly-textDark">Netflix Premium</h4>
                 <p className="text-[10px] text-cuanly-textMuted">Rp 186.000 / bulan • Terdebit otomatis</p>
               </div>
               <div className="text-right">
@@ -500,12 +500,12 @@ export function Overview({
       {/* Grid: Wallets + Recent transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Wallet Balances list */}
-        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-base font-bold">Dompet Aktif</h3>
+            <h3 className="text-base font-bold text-cuanly-textDark">Dompet Aktif</h3>
             <button 
               onClick={() => onNavigate('settings')}
-              className="text-xs font-bold text-cuanly-violetLight hover:underline"
+              className="text-xs font-bold text-cuanly-violet hover:underline"
             >
               Kelola
             </button>
@@ -516,15 +516,15 @@ export function Overview({
               <p className="text-xs text-cuanly-textMuted text-center py-6">Belum ada dompet.</p>
             ) : (
               wallets.map((wallet, idx) => (
-                <div key={idx} className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/5 hover:border-cuanly-border transition-colors duration-200">
+                <div key={idx} className="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-cuanly-border transition-colors duration-200">
                   <div className="flex items-center space-x-3">
                     {renderWalletLogo(wallet.name, wallet.designType)}
                     <div>
-                      <h4 className="text-xs font-bold text-white">{wallet.name}</h4>
+                      <h4 className="text-xs font-bold text-cuanly-textDark">{wallet.name}</h4>
                       <p className="text-[10px] text-cuanly-textMuted">{wallet.cardNumber}</p>
                     </div>
                   </div>
-                  <span className="text-xs font-black">{formatIDR(wallet.balance)}</span>
+                  <span className="text-xs font-black text-cuanly-textDark">{formatIDR(wallet.balance)}</span>
                 </div>
               ))
             )}
@@ -532,12 +532,12 @@ export function Overview({
         </div>
 
         {/* Recent Transactions List */}
-        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6">
+        <div className="lg:col-span-2 bg-cuanly-card border border-cuanly-border rounded-2xl p-6 shadow-sm shadow-slate-100">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-base font-bold">Aktivitas Terakhir</h3>
+            <h3 className="text-base font-bold text-cuanly-textDark">Aktivitas Terakhir</h3>
             <button 
               onClick={() => onNavigate('analytics')}
-              className="text-xs font-bold text-cuanly-violetLight hover:underline"
+              className="text-xs font-bold text-cuanly-violet hover:underline"
             >
               Lihat Detail
             </button>
@@ -548,17 +548,17 @@ export function Overview({
               <p className="text-xs text-cuanly-textMuted text-center py-6">Belum ada transaksi.</p>
             ) : (
               displayedTransactions.slice(0, 4).map((tx, idx) => (
-                <div key={idx} className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-200">
+                <div key={idx} className="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100/50 transition-colors duration-200">
                   <div className="flex items-center space-x-3">
                     <div className={`p-2 rounded-lg ${tx.isExpense ? 'bg-cuanly-coral/10 text-cuanly-coral' : 'bg-cuanly-mint/10 text-cuanly-mint'}`}>
                       {tx.isExpense ? <TrendingDown size={14} /> : <TrendingUp size={14} />}
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-white">{tx.title}</h4>
+                      <h4 className="text-xs font-bold text-cuanly-textDark">{tx.title}</h4>
                       <p className="text-[10px] text-cuanly-textMuted">{tx.category} • {tx.wallet}</p>
                     </div>
                   </div>
-                  <span className={`text-xs font-black ${tx.isExpense ? 'text-white' : 'text-cuanly-mint'}`}>
+                  <span className={`text-xs font-black ${tx.isExpense ? 'text-cuanly-textDark' : 'text-cuanly-mint'}`}>
                     {tx.isExpense ? '-' : '+'} {formatIDR(tx.amount)}
                   </span>
                 </div>

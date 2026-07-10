@@ -23,23 +23,23 @@ export function Sidebar({ activePage, onNavigate, onOpenChat, user, onLogout }) 
               e.target.nextSibling.style.display = 'flex';
             }}
           />
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cuanly-violet to-cuanly-violetLight hidden items-center justify-center shadow-lg shadow-cuanly-violet/30">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cuanly-violet to-cuanly-violetLight hidden items-center justify-center shadow-lg shadow-cuanly-violet/20">
             <span className="text-xl font-bold text-white">C</span>
           </div>
           <div>
-            <h1 className="text-lg font-black text-white tracking-tight">Cuanly</h1>
+            <h1 className="text-lg font-black text-cuanly-textDark tracking-tight">Cuanly</h1>
             <p className="text-[10px] text-cuanly-textMuted font-bold uppercase tracking-wider">Smart Finance Hub</p>
           </div>
         </div>
 
         {/* User profile brief */}
         {user && (
-          <div className="p-4 mx-4 my-3 bg-white/5 rounded-xl border border-white/5 flex items-center space-x-3 group">
+          <div className="p-4 mx-4 my-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center space-x-3 group">
             <div className="relative flex-shrink-0">
               {/* Pulsing/rotating gradient border ring */}
               <div className="absolute -inset-0.5 bg-gradient-to-tr from-cuanly-violet via-cuanly-mint to-cuanly-violetLight rounded-full blur-[2px] opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-spin-slow"></div>
               
-              <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10 bg-gradient-to-tr from-cuanly-violet/80 via-cuanly-violetLight/80 to-cuanly-mint/40 flex items-center justify-center transition-all duration-500 group-hover:rotate-6">
+              <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 bg-gradient-to-tr from-cuanly-violet/80 via-cuanly-violetLight/80 to-cuanly-mint/40 flex items-center justify-center transition-all duration-500 group-hover:rotate-6">
                 {user.avatar ? (
                   <img
                     src={user.avatar}
@@ -56,7 +56,7 @@ export function Sidebar({ activePage, onNavigate, onOpenChat, user, onLogout }) 
               </div>
             </div>
             <div className="overflow-hidden">
-              <h4 className="text-xs font-bold text-white truncate">{user.name}</h4>
+              <h4 className="text-xs font-bold text-cuanly-textDark truncate">{user.name}</h4>
               <p className="text-[10px] text-cuanly-textMuted truncate">Personal Plan</p>
             </div>
           </div>
@@ -77,7 +77,7 @@ export function Sidebar({ activePage, onNavigate, onOpenChat, user, onLogout }) 
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                       isActive
                         ? 'bg-cuanly-violet text-white shadow-lg shadow-cuanly-violet/20'
-                        : 'text-cuanly-textMuted hover:bg-white/5 hover:text-white'
+                        : 'text-cuanly-textMuted hover:bg-slate-50 hover:text-cuanly-violet'
                     }`}
                   >
                     <Icon size={18} />
@@ -101,7 +101,7 @@ export function Sidebar({ activePage, onNavigate, onOpenChat, user, onLogout }) 
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                       isActive
                         ? 'bg-cuanly-violet text-white shadow-lg shadow-cuanly-violet/20'
-                        : 'text-cuanly-textMuted hover:bg-white/5 hover:text-white'
+                        : 'text-cuanly-textMuted hover:bg-slate-50 hover:text-cuanly-violet'
                     }`}
                   >
                     <Icon size={18} />
@@ -125,7 +125,7 @@ export function Sidebar({ activePage, onNavigate, onOpenChat, user, onLogout }) 
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                       isActive
                         ? 'bg-cuanly-violet text-white shadow-lg shadow-cuanly-violet/20'
-                        : 'text-cuanly-textMuted hover:bg-white/5 hover:text-white'
+                        : 'text-cuanly-textMuted hover:bg-slate-50 hover:text-cuanly-violet'
                     }`}
                   >
                     <Icon size={18} />

@@ -41,11 +41,11 @@ class _CuanlyAppState extends State<CuanlyApp> {
   Color _getPrimaryColor() {
     switch (_globalAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669); // Bright emerald green
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8); // Bright sapphire blue
       default:
-        return const Color(0xFFCCA352); // Gold
+        return const Color(0xFFD97706); // Rich Gold/Amber
     }
   }
 
@@ -56,18 +56,18 @@ class _CuanlyAppState extends State<CuanlyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Cuanly',
       theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF0F0F14),
-        cardColor: const Color(0xFF1C1C24),
-        colorScheme: ColorScheme.dark(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
+        cardColor: Colors.white,
+        colorScheme: ColorScheme.light(
           primary: primaryColor,
           secondary: _globalAccent == 'gold'
-              ? const Color(0xFFF5A623)
+              ? const Color(0xFFD97706)
               : _globalAccent == 'emerald'
                   ? const Color(0xFF059669)
                   : const Color(0xFF1D4ED8),
-          surface: const Color(0xFF1C1C24),
-          shadow: Colors.black.withValues(alpha: 0.5),
+          surface: Colors.white,
+          shadow: Colors.black.withOpacity(0.04),
         ),
         fontFamily: 'Arial',
         useMaterial3: true,
@@ -132,11 +132,11 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
   Color _getPrimaryColor() {
     switch (widget.currentAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669);
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8);
       default:
-        return const Color(0xFFCCA352);
+        return const Color(0xFFD97706);
     }
   }
 
@@ -381,21 +381,21 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1C1C24),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Column(
           children: [
-            Icon(Icons.photo_camera, color: Color(0xFF7F77DD), size: 40),
+            Icon(Icons.photo_camera, color: Color(0xFF6366F1), size: 40),
             SizedBox(height: 14),
             Text(
               'Akses Kamera',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
         ),
         content: const Text(
           'Cuanly memerlukan izin kamera untuk memindai struk belanja dan mencatat pengeluaran Anda secara otomatis menggunakan AI.',
-          style: TextStyle(color: Color(0xFF8B8A88), fontSize: 12, height: 1.4),
+          style: TextStyle(color: Color(0xFF475569), fontSize: 12, height: 1.4),
           textAlign: TextAlign.center,
         ),
         actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -410,11 +410,11 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
                 ),
               );
             },
-            child: const Text('Tolak', style: TextStyle(color: Color(0xFF8B8A88), fontWeight: FontWeight.bold)),
+            child: const Text('Tolak', style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.bold)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF7F77DD),
+              backgroundColor: const Color(0xFF6366F1),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
@@ -426,6 +426,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
                 MaterialPageRoute(
                   builder: (context) => CameraScanScreen(
                     apiBaseUrl: _apiBaseUrl,
+                    currentAccent: widget.currentAccent,
                     onScanSuccess: (title, amount, category, wallet) {
                       _addTransaction(title, amount, category, true, wallet);
                       ScaffoldMessenger.of(this.context).showSnackBar(
@@ -439,7 +440,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
                 ),
               );
             },
-            child: const Text('Izinkan', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            child: const Text('Izinkan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -596,53 +597,63 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
     final primaryColor = _getPrimaryColor();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
         child: IndexedStack(
           index: _activeTabIndex,
           children: screens,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _activeTabIndex > 4 ? 4 : _activeTabIndex, // clamp settings tab indicator
-        onTap: (index) {
-          setState(() {
-            if (index == 4) {
-              // Redirect to Chat or Settings depending on tap
-              _activeTabIndex = 4;
-            } else {
-              _activeTabIndex = index;
-            }
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF1C1C24),
-        selectedItemColor: primaryColor,
-        unselectedItemColor: const Color(0xFF8B8A88),
-        selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-        unselectedLabelStyle: const TextStyle(fontSize: 10),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: 'Dompet'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline_rounded), label: 'Catat'),
-          BottomNavigationBarItem(icon: Icon(Icons.analytics_rounded), label: 'Analisis'),
-          BottomNavigationBarItem(icon: Icon(Icons.forum_rounded), label: 'Tanya AI'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _activeTabIndex > 4 ? 4 : _activeTabIndex, // clamp settings tab indicator
+          onTap: (index) {
+            setState(() {
+              if (index == 4) {
+                _activeTabIndex = 4;
+              } else {
+                _activeTabIndex = index;
+              }
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: primaryColor,
+          unselectedItemColor: const Color(0xFF64748B),
+          selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+          unselectedLabelStyle: const TextStyle(fontSize: 10),
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
+            BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: 'Dompet'),
+            BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline_rounded), label: 'Catat'),
+            BottomNavigationBarItem(icon: Icon(Icons.analytics_rounded), label: 'Analisis'),
+            BottomNavigationBarItem(icon: Icon(Icons.forum_rounded), label: 'Tanya AI'),
+          ],
+        ),
       ),
       // Floating Action Button: Kamera di Dashboard, Gear Settings di tab lain
       floatingActionButton: _activeTabIndex == 0
           ? FloatingActionButton(
               onPressed: _showScanBonDialog,
-              backgroundColor: const Color(0xFF7F77DD),
+              backgroundColor: primaryColor,
               tooltip: 'Pindai Struk OCR',
-              child: const Icon(Icons.photo_camera, color: Colors.black, size: 24),
+              child: const Icon(Icons.photo_camera, color: Colors.white, size: 24),
             )
           : (_activeTabIndex != 4 && _activeTabIndex != 5) // Hide on Chat (4) and Settings (5)
               ? FloatingActionButton(
                   onPressed: () => setState(() => _activeTabIndex = 5),
-                  backgroundColor: const Color(0xFF1C1C24),
+                  backgroundColor: Colors.white,
                   mini: true,
-                  child: const Icon(Icons.settings, color: Colors.white70),
+                  child: const Icon(Icons.settings, color: Color(0xFF475569)),
                 )
               : null,
     );

@@ -59,11 +59,11 @@ class _ChatScreenState extends State<ChatScreen> {
   Color _getPrimaryColor() {
     switch (widget.currentAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669);
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8);
       default:
-        return const Color(0xFFCCA352);
+        return const Color(0xFFD97706);
     }
   }
 
@@ -80,15 +80,20 @@ class _ChatScreenState extends State<ChatScreen> {
     final filteredQuestions = widget.demoQuestions.where((q) => q.segment == widget.activeChatSegment).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C1C24),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: Colors.black.withOpacity(0.05), height: 1),
+        ),
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: primaryColor.withValues(alpha: 0.12),
+                color: primaryColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(Icons.auto_awesome, color: primaryColor, size: 18),
@@ -99,11 +104,11 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Text(
                   'Cuanly',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
                 ),
                 Text(
                   'Active Intelligence',
-                  style: TextStyle(fontSize: 10, color: Color(0xFF8B8A88)),
+                  style: TextStyle(fontSize: 10, color: Color(0xFF64748B)),
                 ),
               ],
             ),
@@ -113,19 +118,20 @@ class _ChatScreenState extends State<ChatScreen> {
           // Roast Mode Toggle in appbar
           Row(
             children: [
-              Icon(Icons.local_fire_department, color: widget.roastMode ? const Color(0xFFD85A30) : const Color(0xFF8B8A88), size: 18),
+              Icon(Icons.local_fire_department, color: widget.roastMode ? const Color(0xFFD85A30) : const Color(0xFF64748B), size: 18),
               const SizedBox(width: 4),
-              const Text('Roast', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+              const Text('Roast', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF475569))),
               Switch(
                 value: widget.roastMode,
                 onChanged: widget.onRoastModeChanged,
-                activeThumbColor: const Color(0xFFD85A30),
+                activeTrackColor: const Color(0xFFFEE2E2),
+                activeColor: const Color(0xFFD85A30),
               ),
             ],
           ),
           if (widget.onSettingsClick != null)
             IconButton(
-              icon: const Icon(Icons.settings, color: Colors.white70, size: 20),
+              icon: const Icon(Icons.settings, color: Color(0xFF475569), size: 20),
               onPressed: widget.onSettingsClick,
             ),
         ],
@@ -134,7 +140,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           // Segment selector B2B / B2C
           Container(
-            color: const Color(0xFF1C1C24),
+            color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
@@ -144,17 +150,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        color: widget.activeChatSegment == 'b2c' ? primaryColor.withValues(alpha: 0.12) : Colors.transparent,
+                        color: widget.activeChatSegment == 'b2c' ? primaryColor.withOpacity(0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: widget.activeChatSegment == 'b2c' ? primaryColor.withValues(alpha: 0.3) : Colors.transparent,
+                          color: widget.activeChatSegment == 'b2c' ? primaryColor.withOpacity(0.2) : Colors.transparent,
                         ),
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         'Personal (B2C)',
                         style: TextStyle(
-                          color: widget.activeChatSegment == 'b2c' ? primaryColor : const Color(0xFF8B8A88),
+                          color: widget.activeChatSegment == 'b2c' ? primaryColor : const Color(0xFF64748B),
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -169,17 +175,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        color: widget.activeChatSegment == 'b2b' ? primaryColor.withValues(alpha: 0.12) : Colors.transparent,
+                        color: widget.activeChatSegment == 'b2b' ? primaryColor.withOpacity(0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: widget.activeChatSegment == 'b2b' ? primaryColor.withValues(alpha: 0.3) : Colors.transparent,
+                          color: widget.activeChatSegment == 'b2b' ? primaryColor.withOpacity(0.2) : Colors.transparent,
                         ),
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         'Bisnis / Kantor (B2B)',
                         style: TextStyle(
-                          color: widget.activeChatSegment == 'b2b' ? primaryColor : const Color(0xFF8B8A88),
+                          color: widget.activeChatSegment == 'b2b' ? primaryColor : const Color(0xFF64748B),
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -214,8 +220,16 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C24),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.black.withOpacity(0.05)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.01),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    )
+                  ],
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
@@ -223,10 +237,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     SizedBox(
                       width: 12,
                       height: 12,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF7F77DD)),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF6366F1)),
                     ),
                     SizedBox(width: 8),
-                    Text('Cuanly sedang berpikir...', style: TextStyle(color: Color(0xFF8B8A88), fontSize: 11)),
+                    Text('Cuanly sedang berpikir...', style: TextStyle(color: Color(0xFF64748B), fontSize: 11)),
                   ],
                 ),
               ),
@@ -239,24 +253,24 @@ class _ChatScreenState extends State<ChatScreen> {
           // Input Bar
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: Color(0xFF1C1C24),
-              border: Border(top: BorderSide(color: Colors.white12, width: 0.5)),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(color: Colors.black.withOpacity(0.05), width: 0.5)),
             ),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.04),
+                      color: Colors.black.withOpacity(0.04),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: TextField(
                       controller: _inputController,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                       decoration: const InputDecoration(
                         hintText: 'Tanya Cuanly...',
-                        hintStyle: TextStyle(color: Color(0xFF8B8A88), fontSize: 13),
+                        hintStyle: TextStyle(color: Color(0xFF64748B), fontSize: 13),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         border: InputBorder.none,
                       ),
@@ -284,7 +298,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: primaryColor,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.send, color: Colors.black, size: 16),
+                    child: const Icon(Icons.send, color: Colors.white, size: 16),
                   ),
                 ),
               ],
@@ -304,21 +318,21 @@ class _ChatScreenState extends State<ChatScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF7F77DD).withValues(alpha: 0.1),
+                color: const Color(0xFF6366F1).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.auto_awesome, color: Color(0xFF7F77DD), size: 36),
+              child: const Icon(Icons.auto_awesome, color: Color(0xFF6366F1), size: 36),
             ),
             const SizedBox(height: 16),
             const Text(
               'Tanya Cuanly',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
             const Text(
               'Ajukan pertanyaan seputar budget, pengeluaran kantor, atau simulasi split bill.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+              style: TextStyle(color: Color(0xFF64748B), fontSize: 12),
             ),
             const SizedBox(height: 24),
             Wrap(
@@ -331,13 +345,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1C1C24),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                      border: Border.all(color: Colors.black.withOpacity(0.06)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.01),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
                     ),
                     child: Text(
                       dq.label,
-                      style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11, fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: Color(0xFF475569), fontSize: 11, fontWeight: FontWeight.bold),
                     ),
                   ),
                 );
@@ -356,14 +377,14 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: msg.isUser ? const Color(0xFF534AB7) : const Color(0xFF1C1C24),
+          color: msg.isUser ? primary : const Color(0xFFF1F5F9),
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
             bottomLeft: msg.isUser ? const Radius.circular(16) : const Radius.circular(0),
             bottomRight: msg.isUser ? const Radius.circular(0) : const Radius.circular(16),
           ),
-          border: msg.isUser ? null : Border.all(color: Colors.white.withValues(alpha: 0.04)),
+          border: msg.isUser ? null : Border.all(color: Colors.black.withOpacity(0.02)),
         ),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
         child: Column(
@@ -376,7 +397,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(
                   msg.directAnswer!,
                   style: const TextStyle(
-                    color: Color(0xFF7F77DD),
+                    color: Color(0xFF6366F1),
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
                   ),
@@ -388,12 +409,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1D9E75).withValues(alpha: 0.12),
+                    color: const Color(0xFFD1FAE5),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     msg.contextBadge!,
-                    style: const TextStyle(color: Color(0xFF1D9E75), fontSize: 9, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Color(0xFF065F46), fontSize: 9, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -403,7 +424,7 @@ class _ChatScreenState extends State<ChatScreen> {
             // Main Text Body
             Text(
               msg.text,
-              style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.4),
+              style: TextStyle(color: msg.isUser ? Colors.white : const Color(0xFF0F172A), fontSize: 13, height: 1.4),
             ),
 
             // Roast commentary sub-card
@@ -412,9 +433,9 @@ class _ChatScreenState extends State<ChatScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD85A30).withValues(alpha: 0.08),
+                  color: const Color(0xFFFEE2E2),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFD85A30).withValues(alpha: 0.2)),
+                  border: Border.all(color: const Color(0xFFFCA5A5)),
                 ),
                 child: Row(
                   children: [
@@ -423,7 +444,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Expanded(
                       child: Text(
                         msg.roastText!,
-                        style: const TextStyle(color: Color(0xFFD85A30), fontSize: 11, fontStyle: FontStyle.italic),
+                        style: const TextStyle(color: Color(0xFF991B1B), fontSize: 11, fontStyle: FontStyle.italic),
                       ),
                     ),
                   ],
@@ -437,16 +458,16 @@ class _ChatScreenState extends State<ChatScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.02),
+                  color: Colors.black.withOpacity(0.03),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.source, size: 12, color: Color(0xFF8B8A88)),
+                    const Icon(Icons.source, size: 12, color: Color(0xFF64748B)),
                     const SizedBox(width: 6),
                     Text(
                       'AI RAG: ${msg.retrievedChunks!.length} Dokumen lokal dirujuk.',
-                      style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 9),
+                      style: const TextStyle(color: Color(0xFF64748B), fontSize: 9),
                     ),
                   ],
                 ),
@@ -465,13 +486,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF7F77DD).withValues(alpha: 0.12),
+                        color: const Color(0xFF6366F1).withOpacity(0.08),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFF7F77DD).withValues(alpha: 0.3)),
+                        border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.2)),
                       ),
                       child: Text(
                         rec.toString(),
-                        style: const TextStyle(color: Color(0xFF7F77DD), fontSize: 10, fontWeight: FontWeight.bold),
+                        style: const TextStyle(color: Color(0xFF6366F1), fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ),
                   );
@@ -500,14 +521,21 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: BoxDecoration(
-                color: const Color(0xFF1C1C24),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                border: Border.all(color: Colors.black.withOpacity(0.06)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.01),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  )
+                ],
               ),
               alignment: Alignment.center,
               child: Text(
                 dq.label,
-                style: const TextStyle(color: Color(0xFF8B8A88), fontSize: 11, fontWeight: FontWeight.bold),
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11, fontWeight: FontWeight.bold),
               ),
             ),
           );

@@ -39,11 +39,11 @@ class _AuthScreenState extends State<AuthScreen> {
   Color _getPrimaryColor() {
     switch (widget.currentAccent) {
       case 'emerald':
-        return const Color(0xFF10B981);
+        return const Color(0xFF059669);
       case 'sapphire':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF1D4ED8);
       default:
-        return const Color(0xFFCCA352);
+        return const Color(0xFFD97706);
     }
   }
 
@@ -52,7 +52,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final primaryColor = _getPrimaryColor();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F14),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -67,9 +67,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF534AB7).withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
+                      color: primaryColor.withOpacity(0.2),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
                     )
                   ],
                 ),
@@ -85,7 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
               const Text(
                 'Cuanly',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF0F172A),
                   fontWeight: FontWeight.w900,
                   fontSize: 28,
                   letterSpacing: -0.5,
@@ -94,7 +94,7 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 6),
               const Text(
                 'Smart Personal Finance Hub',
-                style: TextStyle(color: Color(0xFF8B8A88), fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFF64748B), fontSize: 12, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 36),
 
@@ -102,9 +102,16 @@ class _AuthScreenState extends State<AuthScreen> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C24),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                  border: Border.all(color: Colors.black.withOpacity(0.05)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.02),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: Form(
                   key: _formKey,
@@ -112,7 +119,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       Text(
                         _isLoginMode ? 'Login ke Akun Anda' : 'Registrasi Akun Baru',
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                        style: const TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 14),
                       ),
                       const SizedBox(height: 20),
 
@@ -120,16 +127,16 @@ class _AuthScreenState extends State<AuthScreen> {
                       if (!_isLoginMode) ...[
                         TextFormField(
                           controller: _nameController,
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                           decoration: InputDecoration(
                             labelText: 'Nama Lengkap',
-                            labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                            labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: primaryColor),
+                              borderSide: BorderSide(color: primaryColor, width: 1.5),
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
@@ -141,17 +148,17 @@ class _AuthScreenState extends State<AuthScreen> {
                       // Email Field
                       TextFormField(
                         controller: _emailController,
-                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'Alamat Email',
-                          labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                          labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white12),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
+                            borderSide: BorderSide(color: primaryColor, width: 1.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
@@ -163,20 +170,20 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: !_showPassword,
-                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
                         decoration: InputDecoration(
                           labelText: 'Kata Sandi',
-                          labelStyle: const TextStyle(color: Color(0xFF8B8A88), fontSize: 12),
+                          labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white12),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
+                            borderSide: BorderSide(color: primaryColor, width: 1.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           suffixIcon: IconButton(
-                            icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility, color: const Color(0xFF8B8A88), size: 18),
+                            icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility, color: const Color(0xFF64748B), size: 18),
                             onPressed: () => setState(() => _showPassword = !_showPassword),
                           ),
                         ),
@@ -190,7 +197,8 @@ class _AuthScreenState extends State<AuthScreen> {
                         height: 48,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF534AB7),
+                            backgroundColor: primaryColor,
+                            elevation: 0,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                           onPressed: () {
@@ -220,7 +228,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 44,
                           child: TextButton(
                             style: TextButton.styleFrom(
-                              backgroundColor: Colors.white.withValues(alpha: 0.04),
+                              backgroundColor: Colors.black.withOpacity(0.04),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             onPressed: () {
@@ -228,7 +236,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               _passwordController.text = 'password123';
                               widget.onLogin('bilaa@cuanly.ai', 'password123');
                             },
-                            child: const Text('Login Cepat Demo (Bilaa)', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold)),
+                            child: const Text('Login Cepat Demo (Bilaa)', style: TextStyle(color: Color(0xFF475569), fontSize: 11, fontWeight: FontWeight.bold)),
                           ),
                         )
                       ],
@@ -247,7 +255,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 },
                 child: Text(
                   _isLoginMode ? 'Belum memiliki akun? Daftar Sekarang' : 'Sudah memiliki akun? Masuk',
-                  style: const TextStyle(color: Color(0xFF7F77DD), fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               )
             ],
