@@ -364,8 +364,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          CountUpText(
-            value: widget.totalSaldo,
+          Text(
+            'Rp ${NumberFormat.format(widget.totalSaldo)}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 32,
