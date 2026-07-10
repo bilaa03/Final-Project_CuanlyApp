@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/wallet.dart';
+import '../models/transaction.dart';
 import 'home_screen.dart'; // import format helper
 
 class WalletScreen extends StatefulWidget {
   final List<WalletItem> wallets;
+  final List<TransactionItem> transactions;
   final String currentAccent;
   final Function(String, String, double) onTransfer;
 
   const WalletScreen({
     super.key,
     required this.wallets,
+    required this.transactions,
     required this.currentAccent,
     required this.onTransfer,
   });
@@ -232,6 +235,16 @@ class _WalletScreenState extends State<WalletScreen> {
                                   return;
                                 }
                                 final amt = double.parse(_amountController.text);
+                                final sourceWallet = widget.wallets.firstWhere((w) => w.name == _fromWallet);
+                                if (amt > sourceWallet.balance) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Saldo dompet asal tidak mencukupi!'),
+                                      backgroundColor: Color(0xFFE24B4A),
+                                    ),
+                                  );
+                                  return;
+                                }
                                 
                                 // Show confirmation dialog
                                 showDialog(
@@ -308,10 +321,212 @@ class _WalletScreenState extends State<WalletScreen> {
                       ],
                     ),
                   ),
-                )
+                ),
+          if (widget.wallets.isNotEmpty) ...[
+            const SizedBox(height: 28),
+            _buildBalanceDistributionSection(primaryColor),
+            const SizedBox(height: 28),
+            _buildRecentWalletTransactionsSection(primaryColor),
+          ]
         ],
       ),
     );
+  }
+
+  Widget _buildBalanceDistributionSection(Color primaryColor) {
+    double totalBalance = widget.wallets.fold(0.0, (sum, w) => sum + w.balance);
+    if (totalBalance <= 0) totalBalance = 1.0;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.015),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Distribusi Saldo Aset',
+            style: TextStyle(
+              color: Color(0xFF0F172A),
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...widget.wallets.map((w) {
+            final percentage = (w.balance / totalBalance) * 100;
+            
+            Color wColor = const Color(0xFF2563EB);
+            if (w.designType == 'teal') {
+              wColor = const Color(0xFF0D9488);
+            } else if (w.designType == 'purple') {
+              wColor = const Color(0xFF7C3AED);
+            } else if (w.designType == 'slate') {
+              wColor = const Color(0xFF475569);
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 14.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        w.name,
+                        style: const TextStyle(
+                          color: Color(0xFF334155),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        '${percentage.toStringAsFixed(1)}% (${rupiahFormat(w.balance)})',
+                        style: const TextStyle(
+                          color: Color(0xFF64748B),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: w.balance <= 0 ? 0.0 : w.balance / totalBalance,
+                      backgroundColor: const Color(0xFFF1F5F9),
+                      valueColor: AlwaysStoppedAnimation<Color>(wColor),
+                      minHeight: 8,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentWalletTransactionsSection(Color primaryColor) {
+    final walletNames = widget.wallets.map((w) => w.name).toSet();
+    final walletTxs = widget.transactions.where((tx) => walletNames.contains(tx.wallet)).toList();
+
+    walletTxs.sort((a, b) => b.date.compareTo(a.date));
+    final displayTxs = walletTxs.take(4).toList();
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.015),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Riwayat Aktivitas Dompet',
+            style: TextStyle(
+              color: Color(0xFF0F172A),
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (displayTxs.isEmpty)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                child: Text(
+                  'Belum ada transaksi di dompet ini.',
+                  style: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                ),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: displayTxs.length,
+              separatorBuilder: (context, idx) => const Divider(color: Color(0xFFF1F5F9), height: 24),
+              itemBuilder: (context, idx) {
+                final tx = displayTxs[idx];
+                final isExp = tx.isExpense;
+
+                return Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isExp ? const Color(0xFFFEF2F2) : const Color(0xFFECFDF5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isExp ? Icons.arrow_downward : Icons.arrow_upward,
+                        size: 16,
+                        color: isExp ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tx.title,
+                            style: const TextStyle(
+                              color: Color(0xFF334155),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${tx.wallet} • ${tx.category}',
+                            style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '${isExp ? "-" : "+"} Rp ${NumberFormat.format(tx.amount)}',
+                      style: TextStyle(
+                        color: isExp ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  String rupiahFormat(double val) {
+    return 'Rp ${NumberFormat.format(val)}';
   }
 
   Widget _buildCardItem(WalletItem w) {
