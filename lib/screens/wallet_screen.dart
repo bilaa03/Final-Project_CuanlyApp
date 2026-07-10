@@ -414,7 +414,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

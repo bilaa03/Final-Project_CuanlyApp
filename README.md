@@ -32,6 +32,8 @@ Pencatatan keuangan sering kali tertunda karena kendala input manual data transa
 * **Kamera OCR Auto-Detect**: Viewfinder kamera pemindai struk dengan hitung mundur 3 detik yang akan menjepret gambar secara otomatis dan mengunci fokus struk (warna bingkai berubah hijau dengan efek flash putih).
 * **Custom Profile Avatar**: Pengguna dapat memilih 4 preset avatar siluet gradasi premium yang tersimpan secara lokal dan dinamis di dalam state.
 * **Monitoring & Target Tabungan**: Menampilkan target tabungan aktif beserta progress bar dan notifikasi prediktif mengenai sisa saldo akhir bulan.
+* **Pindahkan Saldo (Transfer) & Pengaman Saldo**: Fitur pemindahan dana antar dompet secara *real-time* yang terintegrasi dengan database backend, dilengkapi dengan validasi pencegah transfer melebihi saldo aktif.
+* **Distribusi Saldo Aset & Aktivitas Dompet**: Grafik persentase pembagian uang antar dompet serta daftar riwayat 4 aktivitas transaksi terakhir khusus dompet pengguna di halaman Dompet.
 
 ---
 
@@ -40,7 +42,7 @@ Pencatatan keuangan sering kali tertunda karena kendala input manual data transa
 * **Frontend Web**: React.js & Tailwind CSS
 * **Backend Server**: Node.js & Express.js
 * **Database**: MySQL dengan Prisma ORM (dilengkapi dengan sistem local JSON fallback agar tetap bisa berjalan tanpa setup database MySQL).
-* **AI Engine**: Google Gemini API (`gemini-1.5-flash` / `gemini-2.0-flash`) sebagai LLM utama (dan local fallback simulator jika API Key kosong).
+* **AI Engine & RAG**: Google Gemini API (`gemini-1.5-flash` / `gemini-2.0-flash`) / OpenAI. RAG dikonfigurasi sebagai **Financial Coach** pintar yang melayani konsultasi perencanaan keuangan, tips berhemat, dan alokasi gaji dengan batasan keamanan ketat (melarang rekomendasi investasi spesifik dan melindungi privasi data).
 
 ---
 
@@ -88,6 +90,8 @@ flutter run
 
 ## Endpoint API Backend Utama
 * `GET /health` : Memeriksa status kesehatan server.
-* `GET /financial/state?email=user@email.com` : Mengambil status dompet dan daftar transaksi aktif.
+* `GET /financial/data?email=user@email.com` : Mengambil daftar dompet dan transaksi aktif milik pengguna.
+* `POST /financial/wallet` : Menambahkan dompet baru ke dalam database.
 * `POST /financial/transaction` : Menambahkan transaksi baru ke dalam database.
+* `POST /financial/transfer` : Mengirim instruksi transfer saldo antar dompet pengguna secara online.
 * `POST /rag/query` : Mengirim query pencarian dokumen referensi ke engine RAG.
