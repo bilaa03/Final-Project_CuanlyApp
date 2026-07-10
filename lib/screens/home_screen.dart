@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '../models/transaction.dart';
 import '../models/wallet.dart';
+import '../models/saving_goal.dart';
+import '../models/subscription.dart';
 
 // Helper class for number formatting
 class NumberFormat {
@@ -93,6 +95,10 @@ class HomeScreen extends StatefulWidget {
   final double budgetLimit;
   final List<TransactionItem> transactions;
   final List<WalletItem> wallets;
+  final List<SavingGoal> savingGoals;
+  final List<SubscriptionItem> subscriptions;
+  final Function(SavingGoal) onAddSavingGoal;
+  final Function(SubscriptionItem) onAddSubscription;
   final VoidCallback onScanClick;
   final Function(int) onNavigateToTab;
 
@@ -104,6 +110,10 @@ class HomeScreen extends StatefulWidget {
     required this.budgetLimit,
     required this.transactions,
     required this.wallets,
+    required this.savingGoals,
+    required this.subscriptions,
+    required this.onAddSavingGoal,
+    required this.onAddSubscription,
     required this.onScanClick,
     required this.onNavigateToTab,
   });
@@ -922,15 +932,172 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Target Menabung (Goals)',
-          style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Target Menabung (Goals)',
+              style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle, color: Color(0xFF6366F1), size: 24),
+              onPressed: _showAddGoalDialog,
+              tooltip: 'Tambah Target',
+            ),
+          ],
         ),
         const SizedBox(height: 12),
-        _buildGoalItem('💻 Beli Laptop Baru', 4500000, 7500000, const Color(0xFF6366F1)),
-        const SizedBox(height: 12),
-        _buildGoalItem('🛡️ Dana Darurat 2026', 1500000, 3000000, const Color(0xFF059669)),
+        if (widget.savingGoals.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.0),
+            child: Text(
+              'Belum ada target menabung. Klik tombol tambah di atas.',
+              style: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+            ),
+          )
+        else
+          ...widget.savingGoals.map((goal) {
+            Color color = const Color(0xFF6366F1);
+            try {
+              color = Color(int.parse('FF${goal.colorHex}', radix: 16));
+            } catch (_) {}
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: _buildGoalItem(goal.title, goal.current, goal.target, color),
+            );
+          }),
       ],
+    );
+  }
+
+  void _showAddGoalDialog() {
+    final titleCtrl = TextEditingController();
+    final currentCtrl = TextEditingController();
+    final targetCtrl = TextEditingController();
+    String colorHex = '6366F1';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: const Text(
+                'Tambah Target Menabung',
+                style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: titleCtrl,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Nama Target (contoh: 🚗 Beli Mobil)',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: currentCtrl,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Saldo Tabungan Saat Ini (Rupiah)',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: targetCtrl,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Nominal Target Akhir (Rupiah)',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Pilih Warna Tema:', style: TextStyle(color: Color(0xFF334155), fontSize: 11, fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildColorSelector('6366F1', colorHex, (hex) => setDialogState(() => colorHex = hex)),
+                        _buildColorSelector('059669', colorHex, (hex) => setDialogState(() => colorHex = hex)),
+                        _buildColorSelector('D97706', colorHex, (hex) => setDialogState(() => colorHex = hex)),
+                        _buildColorSelector('EF4444', colorHex, (hex) => setDialogState(() => colorHex = hex)),
+                        _buildColorSelector('7C3AED', colorHex, (hex) => setDialogState(() => colorHex = hex)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Batal', style: TextStyle(color: Color(0xFF64748B))),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6366F1),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () {
+                    final title = titleCtrl.text.trim();
+                    final cur = double.tryParse(currentCtrl.text) ?? 0.0;
+                    final tar = double.tryParse(targetCtrl.text) ?? 0.0;
+
+                    if (title.isEmpty || tar <= 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Mohon isi nama target dan nominal target akhir.'), backgroundColor: Color(0xFFE24B4A)),
+                      );
+                      return;
+                    }
+
+                    widget.onAddSavingGoal(SavingGoal(
+                      title: title,
+                      current: cur,
+                      target: tar,
+                      colorHex: colorHex,
+                    ));
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Simpan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildColorSelector(String hex, String selectedHex, Function(String) onSelect) {
+    final isSelected = hex == selectedHex;
+    final color = Color(int.parse('FF$hex', radix: 16));
+
+    return GestureDetector(
+      onTap: () => onSelect(hex),
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: isSelected ? Border.all(color: Colors.black, width: 2) : null,
+        ),
+        child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
+      ),
     );
   }
 
@@ -972,7 +1139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(color: Colors.black.withOpacity(0.04), borderRadius: BorderRadius.circular(3)),
               ),
               FractionallySizedBox(
-                widthFactor: pct,
+                widthFactor: pct > 1.0 ? 1.0 : pct,
                 child: Container(
                   height: 6,
                   decoration: BoxDecoration(color: progressColor, borderRadius: BorderRadius.circular(3)),
@@ -982,7 +1149,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Tercapai ${(pct * 100).toStringAsFixed(0)}% — Nabung Rp 500.000 lagi bulan ini untuk tetap on-track.',
+            'Tercapai ${(pct * 100).toStringAsFixed(0)}% — ${pct >= 1.0 ? "Target Terpenuhi!" : "Nabung Rp ${NumberFormat.format(target - current)} lagi untuk tetap on-track."}',
             style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
           )
         ],
@@ -994,9 +1161,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Deteksi Langganan Otomatis',
-          style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Deteksi Langganan Otomatis',
+              style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle, color: Color(0xFF059669), size: 24),
+              onPressed: _showAddSubscriptionDialog,
+              tooltip: 'Tambah Langganan',
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         Container(
@@ -1013,27 +1190,147 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ],
           ),
-          child: Column(
-            children: [
-              _buildSubscriptionItem(
-                name: 'Spotify Premium',
-                price: 'Rp 54.990/bln',
-                status: 'Sering digunakan',
-                color: const Color(0xFF059669),
-                isWarning: false,
-              ),
-              const Divider(color: Colors.black12, height: 24),
-              _buildSubscriptionItem(
-                name: 'Netflix Premium',
-                price: 'Rp 186.000/bln',
-                status: 'Jarang digunakan',
-                color: const Color(0xFFEF4444),
-                isWarning: true,
-              ),
-            ],
-          ),
+          child: widget.subscriptions.isEmpty
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    child: Text(
+                      'Belum ada langganan terdaftar. Klik tombol tambah di atas.',
+                      style: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                    ),
+                  ),
+                )
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.subscriptions.length,
+                  separatorBuilder: (context, idx) => const Divider(color: Colors.black12, height: 24),
+                  itemBuilder: (context, idx) {
+                    final sub = widget.subscriptions[idx];
+                    Color color = const Color(0xFF059669);
+                    try {
+                      color = Color(int.parse('FF${sub.colorHex}', radix: 16));
+                    } catch (_) {}
+
+                    return _buildSubscriptionItem(
+                      name: sub.name,
+                      price: 'Rp ${NumberFormat.format(sub.price)}/bln',
+                      status: sub.status,
+                      color: color,
+                      isWarning: sub.status.contains('Jarang') || sub.colorHex == 'EF4444',
+                    );
+                  },
+                ),
         ),
       ],
+    );
+  }
+
+  void _showAddSubscriptionDialog() {
+    final nameCtrl = TextEditingController();
+    final priceCtrl = TextEditingController();
+    String usageStatus = 'Sering digunakan';
+    String colorHex = '059669';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: const Text(
+                'Tambah Deteksi Langganan',
+                style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameCtrl,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Nama Layanan (contoh: Disney+ Hotstar)',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: priceCtrl,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Biaya Langganan Bulanan (Rupiah)',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: usageStatus,
+                      dropdownColor: Colors.white,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Status Penggunaan',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: 'Sering digunakan', child: Text('Sering digunakan')),
+                        DropdownMenuItem(value: 'Jarang digunakan', child: Text('Jarang digunakan')),
+                        DropdownMenuItem(value: 'Sedang digunakan', child: Text('Sedang digunakan')),
+                      ],
+                      onChanged: (val) {
+                        if (val != null) {
+                          setDialogState(() {
+                            usageStatus = val;
+                            colorHex = val.contains('Jarang') ? 'EF4444' : '059669';
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Batal', style: TextStyle(color: Color(0xFF64748B))),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF059669),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () {
+                    final name = nameCtrl.text.trim();
+                    final price = double.tryParse(priceCtrl.text) ?? 0.0;
+
+                    if (name.isEmpty || price <= 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Mohon isi nama layanan dan nominal harga bulanan.'), backgroundColor: Color(0xFFE24B4A)),
+                      );
+                      return;
+                    }
+
+                    widget.onAddSubscription(SubscriptionItem(
+                      name: name,
+                      price: price,
+                      status: usageStatus,
+                      colorHex: colorHex,
+                    ));
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Simpan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

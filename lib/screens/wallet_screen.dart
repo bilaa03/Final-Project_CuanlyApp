@@ -8,6 +8,7 @@ class WalletScreen extends StatefulWidget {
   final List<TransactionItem> transactions;
   final String currentAccent;
   final Function(String, String, double) onTransfer;
+  final Function(String, double, String, String) onAddWallet;
 
   const WalletScreen({
     super.key,
@@ -15,6 +16,7 @@ class WalletScreen extends StatefulWidget {
     required this.transactions,
     required this.currentAccent,
     required this.onTransfer,
+    required this.onAddWallet,
   });
 
   @override
@@ -73,9 +75,12 @@ class _WalletScreenState extends State<WalletScreen> {
             height: 180,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: widget.wallets.length,
+              itemCount: widget.wallets.length + 1,
               separatorBuilder: (context, idx) => const SizedBox(width: 14),
               itemBuilder: (context, idx) {
+                if (idx == widget.wallets.length) {
+                  return _buildAddWalletCard();
+                }
                 final w = widget.wallets[idx];
                 return _buildCardItem(w);
               },
@@ -573,7 +578,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 w.name,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
               ),
-              const Icon(Icons.credit_card, color: Colors.white70, size: 20),
+              _getWalletLogo(w.name),
             ],
           ),
           const SizedBox(height: 12),
@@ -587,6 +592,460 @@ class _WalletScreenState extends State<WalletScreen> {
             style: const TextStyle(color: Colors.white70, fontSize: 11, fontFamily: 'monospace', letterSpacing: 1),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _getWalletLogo(String name, {bool whiteTheme = false}) {
+    final lower = name.toLowerCase();
+    
+    if (lower.contains('gopay')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFF00AED6) : Colors.white24,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          'go pay',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.w900,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      );
+    }
+    
+    if (lower.contains('ovo')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFF4C2A86) : Colors.white24,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          'OVO',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
+      );
+    }
+
+    if (lower.contains('dana')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFF118EEA) : Colors.white24,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          'DANA',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      );
+    }
+
+    if (lower.contains('shopee')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFFEE4D2D) : Colors.white24,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          'S Pay',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
+    if (lower.contains('linkaja') || lower.contains('link aja')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFFE21F26) : Colors.white24,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          'LinkAja!',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
+    if (lower.contains('mandiri')) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'mandıri',
+            style: TextStyle(
+              color: whiteTheme ? const Color(0xFF1C3F94) : Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          const SizedBox(width: 2),
+          Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFDB813),
+              shape: BoxShape.circle,
+            ),
+          ),
+        ],
+      );
+    }
+
+    if (lower.contains('bca')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFF005EAC) : Colors.white24,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          'BCA',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
+    if (lower.contains('bri')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFF0F4C81) : Colors.white24,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          'BRI',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
+    if (lower.contains('bni')) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        decoration: BoxDecoration(
+          color: whiteTheme ? const Color(0xFFE55300) : Colors.white24,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          'BNI',
+          style: TextStyle(
+            color: whiteTheme ? Colors.white : Colors.white,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
+    return Icon(Icons.credit_card, color: whiteTheme ? Colors.grey : Colors.white70, size: 20);
+  }
+
+  Widget _buildAddWalletCard() {
+    return GestureDetector(
+      onTap: _showAddWalletDialog,
+      child: Container(
+        width: 280,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFFCBD5E1), width: 2, style: BorderStyle.solid),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
+        ),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add_card_rounded, color: Color(0xFF64748B), size: 36),
+            SizedBox(height: 10),
+            Text(
+              'Tambah Dompet Baru',
+              style: TextStyle(color: Color(0xFF475569), fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Bank atau E-Wallet',
+              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAddWalletDialog() {
+    String walletType = 'E-Wallet';
+    String selectedEWallet = 'GoPay';
+    String selectedBank = 'Bank Mandiri';
+    final customBankController = TextEditingController();
+    final balanceController = TextEditingController();
+    final cardNumberController = TextEditingController();
+    String designType = 'teal';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: const Text(
+                'Tambah Dompet Baru',
+                style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: walletType == 'E-Wallet' ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                              foregroundColor: walletType == 'E-Wallet' ? Colors.white : const Color(0xFF475569),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () => setDialogState(() => walletType = 'E-Wallet'),
+                            child: const Text('E-Wallet', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: walletType == 'Bank' ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                              foregroundColor: walletType == 'Bank' ? Colors.white : const Color(0xFF475569),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () => setDialogState(() => walletType = 'Bank'),
+                            child: const Text('Bank', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (walletType == 'E-Wallet') ...[
+                      DropdownButtonFormField<String>(
+                        value: selectedEWallet,
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                        decoration: const InputDecoration(
+                          labelText: 'Pilih E-Wallet',
+                          labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                        ),
+                        items: ['GoPay', 'OVO', 'DANA', 'ShopeePay', 'LinkAja'].map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Row(
+                              children: [
+                                _getWalletLogo(e, whiteTheme: true),
+                                const SizedBox(width: 10),
+                                Text(e),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (val) {
+                          if (val != null) {
+                            setDialogState(() {
+                              selectedEWallet = val;
+                              if (val == 'GoPay' || val == 'DANA' || val == 'ShopeePay') designType = 'teal';
+                              if (val == 'OVO') designType = 'purple';
+                              if (val == 'LinkAja') designType = 'teal';
+                            });
+                          }
+                        },
+                      ),
+                    ] else ...[
+                      DropdownButtonFormField<String>(
+                        value: selectedBank,
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                        decoration: const InputDecoration(
+                          labelText: 'Pilih Bank',
+                          labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                        ),
+                        items: ['Bank Mandiri', 'Bank BCA', 'Bank BRI', 'Bank BNI', 'Bank Lainnya (Tulis Sendiri)'].map((b) {
+                          return DropdownMenuItem(
+                            value: b,
+                            child: Row(
+                              children: [
+                                _getWalletLogo(b, whiteTheme: true),
+                                const SizedBox(width: 10),
+                                Text(b),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (val) {
+                          if (val != null) {
+                            setDialogState(() {
+                              selectedBank = val;
+                              if (val == 'Bank Mandiri' || val == 'Bank BCA' || val == 'Bank BRI') designType = 'slate';
+                              if (val == 'Bank BNI') designType = 'purple';
+                            });
+                          }
+                        },
+                      ),
+                      if (selectedBank == 'Bank Lainnya (Tulis Sendiri)') ...[
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: customBankController,
+                          style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                          decoration: const InputDecoration(
+                            labelText: 'Nama Bank Lainnya',
+                            labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                          ),
+                        ),
+                      ],
+                    ],
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: balanceController,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: const InputDecoration(
+                        labelText: 'Saldo Awal (Rupiah)',
+                        labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: cardNumberController,
+                      style: const TextStyle(color: Color(0xFF0F172A), fontSize: 13),
+                      decoration: InputDecoration(
+                        labelText: walletType == 'E-Wallet' ? 'Nomor HP Akun E-Wallet' : 'Nomor Kartu / Rekening',
+                        labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Desain & Warna Kartu:', style: TextStyle(color: Color(0xFF334155), fontSize: 11, fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildDesignSelector('teal', designType, const Color(0xFF0D9488), (d) => setDialogState(() => designType = d)),
+                        _buildDesignSelector('purple', designType, const Color(0xFF7C3AED), (d) => setDialogState(() => designType = d)),
+                        _buildDesignSelector('slate', designType, const Color(0xFF475569), (d) => setDialogState(() => designType = d)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Batal', style: TextStyle(color: Color(0xFF64748B))),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _getPrimaryColor(),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () {
+                    String finalWalletName = '';
+                    if (walletType == 'E-Wallet') {
+                      finalWalletName = selectedEWallet;
+                    } else {
+                      if (selectedBank == 'Bank Lainnya (Tulis Sendiri)') {
+                        finalWalletName = customBankController.text.trim();
+                      } else {
+                        finalWalletName = selectedBank;
+                      }
+                    }
+
+                    final balance = double.tryParse(balanceController.text) ?? 0.0;
+                    String cardNo = cardNumberController.text.trim();
+
+                    if (finalWalletName.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Nama dompet / bank tidak boleh kosong.'), backgroundColor: Color(0xFFE24B4A)),
+                      );
+                      return;
+                    }
+
+                    if (cardNo.isEmpty) {
+                      cardNo = walletType == 'E-Wallet' ? '0812 •••• ••••' : '•••• •••• •••• 8821';
+                    }
+
+                    widget.onAddWallet(finalWalletName, balance, cardNo, designType);
+                    Navigator.pop(context);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Dompet $finalWalletName berhasil ditambahkan!'), backgroundColor: const Color(0xFF10B981)),
+                    );
+                  },
+                  child: const Text('Simpan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildDesignSelector(String val, String selectedVal, Color color, Function(String) onSelect) {
+    final isSelected = val == selectedVal;
+    return GestureDetector(
+      onTap: () => onSelect(val),
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: isSelected ? Border.all(color: Colors.black, width: 2.5) : null,
+        ),
+        child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
       ),
     );
   }

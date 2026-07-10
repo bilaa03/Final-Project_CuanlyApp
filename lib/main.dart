@@ -8,6 +8,8 @@ import 'models/demo_question.dart';
 import 'models/transaction.dart';
 import 'models/user.dart';
 import 'models/wallet.dart';
+import 'models/saving_goal.dart';
+import 'models/subscription.dart';
 
 import 'screens/auth_screen.dart';
 import 'screens/home_screen.dart';
@@ -112,6 +114,28 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
 
   final List<WalletItem> _wallets = [];
   late List<TransactionItem> _transactions;
+
+  final List<SavingGoal> _savingGoals = [
+    SavingGoal(title: '💻 Beli Laptop Baru', current: 4500000, target: 7500000, colorHex: '6366F1'),
+    SavingGoal(title: '🛡️ Dana Darurat 2026', current: 1500000, target: 3000000, colorHex: '059669'),
+  ];
+
+  final List<SubscriptionItem> _subscriptions = [
+    SubscriptionItem(name: 'Spotify Premium', price: 54990, status: 'Sering digunakan', colorHex: '059669'),
+    SubscriptionItem(name: 'Netflix Premium', price: 186000, status: 'Jarang digunakan', colorHex: 'EF4444'),
+  ];
+
+  void _addSavingGoal(SavingGoal goal) {
+    setState(() {
+      _savingGoals.add(goal);
+    });
+  }
+
+  void _addSubscription(SubscriptionItem sub) {
+    setState(() {
+      _subscriptions.add(sub);
+    });
+  }
 
   // AI Chat states
   // Gunakan http://10.0.2.2:8787 untuk Android Emulator, atau http://localhost:8787 untuk Web/Windows Desktop
@@ -296,6 +320,32 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
           'fromWallet': from,
           'toWallet': to,
           'amount': amount,
+        }),
+      ).catchError((_) => http.Response('Offline Fallback', 200));
+    }
+  }
+
+  void _addWallet(String name, double balance, String cardNumber, String designType) {
+    final newWallet = WalletItem(
+      name: name,
+      balance: balance,
+      cardNumber: cardNumber,
+      designType: designType,
+    );
+    setState(() {
+      _wallets.add(newWallet);
+    });
+
+    if (_isLoggedIn) {
+      http.post(
+        Uri.parse('$_apiBaseUrl/financial/wallet'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': _userEmail,
+          'name': name,
+          'balance': balance,
+          'cardNumber': cardNumber,
+          'designType': designType,
         }),
       ).catchError((_) => http.Response('Offline Fallback', 200));
     }
@@ -564,6 +614,10 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
         budgetLimit: _budgetLimit,
         transactions: _transactions,
         wallets: _wallets,
+        savingGoals: _savingGoals,
+        subscriptions: _subscriptions,
+        onAddSavingGoal: _addSavingGoal,
+        onAddSubscription: _addSubscription,
         onScanClick: _showScanBonDialog,
         onNavigateToTab: (idx) => setState(() => _activeTabIndex = idx),
       ),
@@ -572,6 +626,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
         transactions: _transactions,
         currentAccent: widget.currentAccent,
         onTransfer: _transferWallet,
+        onAddWallet: _addWallet,
       ),
       TransactionScreen(
         transactions: _transactions,
