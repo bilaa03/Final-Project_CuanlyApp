@@ -10,6 +10,7 @@ import 'models/user.dart';
 import 'models/wallet.dart';
 import 'models/saving_goal.dart';
 import 'models/subscription.dart';
+import 'models/notification.dart';
 
 import 'screens/auth_screen.dart';
 import 'screens/home_screen.dart';
@@ -125,6 +126,25 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
     SubscriptionItem(name: 'Netflix Premium', price: 186000, status: 'Jarang digunakan', colorHex: 'EF4444'),
   ];
 
+  final List<AppNotification> _notifications = [
+    AppNotification(
+      id: '1',
+      title: 'Limit Anggaran Makanan',
+      desc: 'Anggaran Makanan sudah terpakai 85%! Pikir-pikir lagi sebelum ngopi santai ya.',
+      icon: Icons.warning_amber_rounded,
+      color: const Color(0xFFF59E0B),
+      date: DateTime.now().subtract(const Duration(hours: 2)),
+    ),
+    AppNotification(
+      id: '2',
+      title: 'Tagihan Spotify Premium',
+      desc: 'Tagihan Spotify Rp 54.990 jatuh tempo besok. Saldo GoPay terdebit otomatis.',
+      icon: Icons.event_repeat,
+      color: const Color(0xFF059669),
+      date: DateTime.now().subtract(const Duration(hours: 5)),
+    ),
+  ];
+
   void _addSavingGoal(SavingGoal goal) {
     setState(() {
       _savingGoals.add(goal);
@@ -134,6 +154,14 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
   void _addSubscription(SubscriptionItem sub) {
     setState(() {
       _subscriptions.add(sub);
+      _notifications.insert(0, AppNotification(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: 'Tagihan Baru Terdaftar',
+        desc: 'Tagihan "${sub.name}" sebesar Rp ${NumberFormat.format(sub.price)}/bln ditambahkan. Saldo Anda akan dipotong berkala.',
+        icon: Icons.notifications_active,
+        color: const Color(0xFFF59E0B),
+        date: DateTime.now(),
+      ));
     });
   }
 
@@ -284,6 +312,17 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
       } else {
         wallet.balance += amount;
       }
+      
+      _notifications.insert(0, AppNotification(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: isExpense ? 'Pengeluaran Dicatat' : 'Pemasukan Dicatat',
+        desc: isExpense
+            ? 'Transaksi "$title" sebesar Rp ${NumberFormat.format(amount)} didebit dari $walletName.'
+            : 'Berhasil menerima Rp ${NumberFormat.format(amount)} ke dompet $walletName.',
+        icon: isExpense ? Icons.shopping_bag : Icons.account_balance_wallet_rounded,
+        color: isExpense ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+        date: DateTime.now(),
+      ));
     });
 
     // Notify backend if online
@@ -309,6 +348,15 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
       final tWallet = _wallets.firstWhere((w) => w.name == to);
       fWallet.balance -= amount;
       tWallet.balance += amount;
+      
+      _notifications.insert(0, AppNotification(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: 'Transfer Sukses',
+        desc: 'Berhasil memindahkan Rp ${NumberFormat.format(amount)} dari $from ke $to.',
+        icon: Icons.swap_horiz_rounded,
+        color: const Color(0xFF6366F1),
+        date: DateTime.now(),
+      ));
     });
 
     if (_isLoggedIn) {
@@ -616,6 +664,7 @@ class _CuanlyMainLayoutState extends State<CuanlyMainLayout> {
         wallets: _wallets,
         savingGoals: _savingGoals,
         subscriptions: _subscriptions,
+        notifications: _notifications,
         onAddSavingGoal: _addSavingGoal,
         onAddSubscription: _addSubscription,
         onScanClick: _showScanBonDialog,

@@ -4,6 +4,7 @@ import '../models/transaction.dart';
 import '../models/wallet.dart';
 import '../models/saving_goal.dart';
 import '../models/subscription.dart';
+import '../models/notification.dart';
 
 // Helper class for number formatting
 class NumberFormat {
@@ -97,6 +98,7 @@ class HomeScreen extends StatefulWidget {
   final List<WalletItem> wallets;
   final List<SavingGoal> savingGoals;
   final List<SubscriptionItem> subscriptions;
+  final List<AppNotification> notifications;
   final Function(SavingGoal) onAddSavingGoal;
   final Function(SubscriptionItem) onAddSubscription;
   final VoidCallback onScanClick;
@@ -112,6 +114,7 @@ class HomeScreen extends StatefulWidget {
     required this.wallets,
     required this.savingGoals,
     required this.subscriptions,
+    required this.notifications,
     required this.onAddSavingGoal,
     required this.onAddSubscription,
     required this.onScanClick,
@@ -1388,6 +1391,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.65),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -1412,24 +1416,32 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            _buildNotificationItem(
-              icon: Icons.warning_amber_rounded,
-              color: const Color(0xFFF59E0B),
-              title: 'Limit Anggaran Makanan',
-              desc: 'Anggaran Makanan sudah terpakai 85%! Pikir-pikir lagi sebelum ngopi santai ya.',
-            ),
-            _buildNotificationItem(
-              icon: Icons.event_repeat,
-              color: const Color(0xFF059669),
-              title: 'Tagihan Spotify Premium',
-              desc: 'Tagihan Spotify Rp 54.999 jatuh tempo besok. Saldo GoPay terdebit otomatis.',
-            ),
-            _buildNotificationItem(
-              icon: Icons.insights,
-              color: const Color(0xFF6366F1),
-              title: 'Rangkuman Mingguan',
-              desc: 'Hebat! Pengeluaran mingguanmu turun 12% dibanding minggu lalu. Teruskan hematnya!',
-            ),
+            if (widget.notifications.isEmpty)
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    'Tidak ada pemberitahuan baru.',
+                    style: TextStyle(color: Color(0xFF64748B), fontSize: 13),
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: widget.notifications.length,
+                  separatorBuilder: (context, idx) => const SizedBox(height: 16),
+                  itemBuilder: (context, idx) {
+                    final notif = widget.notifications[idx];
+                    return _buildNotificationItem(
+                      icon: notif.icon,
+                      color: notif.color,
+                      title: notif.title,
+                      desc: notif.desc,
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),
